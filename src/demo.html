@@ -42,7 +42,7 @@ img,svg{max-width:100%}
 @media (max-width:820px){.nav{display:none}.hdr{height:64px;padding:0 16px;gap:12px}.announce{font-size:11px;padding:9px 8px}}
 
 /* ---------- common ---------- */
-.wrap{max-width:1100px;margin:0 auto;padding:22px 20px 120px}
+.wrap{max-width:1100px;margin:0 auto;padding:22px 20px 60px}
 .screen{display:none}.screen.on{display:block;animation:fade .25s ease}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.screen.on{animation:none}}
@@ -285,7 +285,7 @@ table.t th{background:var(--paper-2);font-weight:600;font-size:10px;letter-spaci
 .modal .box{background:#fff;max-width:520px;width:100%;padding:22px;border-radius:4px;max-height:90vh;overflow:auto}
 .modal .grp{margin-bottom:14px}
 @media (max-width:760px){
-  .wrap{padding:14px 14px 120px}
+  .wrap{padding:14px 14px 60px}
   .h1{font-size:22px}
   .stage{min-height:0;padding:12px}
   .cap3{gap:16px;flex-wrap:wrap;font-size:11px}
@@ -415,7 +415,7 @@ table.t th{background:var(--paper-2);font-weight:600;font-size:10px;letter-spaci
 
 <!-- ============ SCREEN 3 · CALCULATOR ============ -->
 <section class="screen" data-screen="calc">
-  <div class="toolbar"><button class="back" onclick="go('product')">‹</button><span class="t">How many hides?</span><span class="ld">LD</span></div>
+  <div class="toolbar"><button class="back" onclick="go('fitting')">‹</button><span class="t">How many hides?</span><span class="ld">LD</span></div>
   <div class="frame calc">
     <div>
       <div class="grp"><p class="lbl">Garment</p><div class="chips" id="kGarment"></div></div>
@@ -478,16 +478,7 @@ table.t th{background:var(--paper-2);font-weight:600;font-size:10px;letter-spaci
 
 </main>
 
-<nav class="demonav" id="demonav" aria-label="Demo screens">
-  <button data-go="product">0 · Product</button>
-  <button data-go="fitting">Fitting room</button>
-  <button data-go="calc">3 · Calculator</button>
-  <button data-go="compare">8 · Compare</button>
-  <button data-go="cutmap">9 · Cutting map</button>
-  <button data-go="project">5 · Project</button>
-  <button data-go="more">More</button>
-  <span class="dot" id="aiDot" title="AI: backups"></span>
-</nav>
+
 <div class="toast" id="toast"></div>
 
 <div class="modal" id="setup">
@@ -605,13 +596,12 @@ function monoTap(){monoTaps++;clearTimeout(monoT);monoT=setTimeout(()=>monoTaps=
 function openSetup(){const c=AI.cfg;$('aiProvider').value=c.provider||'gemini';$('aiModel').value=c.model||'';$('aiKey').value=c.key||'';$('aiOff').checked=!!c.off;$('aiStatus').textContent=c.key?'A key is saved on this device.':'No key saved: the demo uses the pregenerated images.';$('setup').classList.add('on');}
 function saveSetup(){AI.save({provider:$('aiProvider').value,model:$('aiModel').value.trim(),key:$('aiKey').value.trim(),off:$('aiOff').checked});aiDot();$('aiStatus').textContent='Saved.';toast(AI.enabled()?'Live AI on (falls back to backups if it fails)':'Using pregenerated images');}
 async function testSetup(){saveSetup();if(!AI.enabled()){$('aiStatus').textContent='Nothing to test: no key or backups forced.';return;}$('aiStatus').textContent='Testing… (one small call)';try{const ctl=new AbortController();setTimeout(()=>ctl.abort(),90000);const L=LEATHERS.nappa;const url=await AI.generate('a small square leather swatch card',L,'Cognac','#8b4a22',ctl.signal);$('aiStatus').innerHTML=`OK. <img src="${url}" style="width:60px;height:60px;vertical-align:middle;margin-left:8px;border:1px solid #ddd">`;}catch(e){$('aiStatus').textContent='Failed: '+e.message;}}
-function aiDot(){const d=$('aiDot');d.classList.toggle('live',AI.enabled());d.title=AI.enabled()?'AI: live, with backups':'AI: pregenerated backups';}
+function aiDot(){}
 $('aiProvider').addEventListener('change',()=>{$('aiModel').placeholder=$('aiProvider').value==='openai'?'gpt-image-1':'gemini-2.5-flash-image';});
 
 /* ======================= NAVIGATION ======================= */
 function go(name,opts={}){
   document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.dataset.screen===name));
-  document.querySelectorAll('.demonav button').forEach(b=>b.classList.toggle('on',b.dataset.go===name));
   if(name==='product')renderProduct();
   if(name==='calc')renderCalc();
   if(name==='compare')renderCompare();
@@ -621,7 +611,6 @@ function go(name,opts={}){
   if(history.replaceState)history.replaceState(null,'','#'+name);
   if(!opts.keepScroll)window.scrollTo({top:0,behavior:'smooth'});
 }
-document.querySelectorAll('.demonav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
 function openCalc(leather,kind){if(leather)K.leather=leather;K.color=0;if(kind)K.kind=kind;if(S.kind&&!kind)K.kind=S.kind;K.fit=S.fit;K.size=S.size;K.waste=S.waste;go('calc');}
 function openFitting(leather){if(leather){S.leather=leather;S.color=PP.color;S.picked=true;}go('fitting');renderLeathers();goStep(S.picked?2:1);}
 
@@ -860,7 +849,7 @@ document.querySelectorAll('.pt').forEach(b=>b.addEventListener('click',()=>pickP
 $('idea').addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='Enter')generate();});
 document.querySelectorAll('.steps li').forEach(li=>li.addEventListener('click',()=>{if(li.classList.contains('done'))goStep(+li.dataset.s);}));
 aiDot();
-(function(){const h=(location.hash||'').replace('#','');if(h==='setup'){go('product');openSetup();}else go(['product','fitting','calc','compare','cutmap','project','more'].includes(h)?h:'product');})();
+(function(){const h=(location.hash||'').replace('#','');if(h==='setup'){go('fitting');openSetup();}else go(['product','fitting','calc','compare','cutmap','project','more'].includes(h)?h:'fitting');})();
 </script>
 </body>
 </html>
