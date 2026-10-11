@@ -8,22 +8,26 @@ Herramienta que vive dentro de la tienda Shopify de District Leathers (districtl
 Brief original: `docs/Brief_Desarrollador_District.pdf` (Martín Flores, oct 2026, v3). Es confidencial (NDA) y está ignorado por git: el repo es público, el PDF se guarda solo en local. El código, repo y cuentas van a nombre de la empresa de Martín; la IP es de esa empresa.
 
 ## Estado actual (oct 2026)
-- `demo/index.html`: prototipo navegable de una sola página, 3 pasos, datos fijos, sin Shopify. Es lo que se enseña a los dueños (Alex y Stephen). Todo embebido (fuentes de Google, fotos en base64).
+- `demo/index.html`: prototipo navegable de una sola página, datos fijos, sin Shopify. Es lo que se enseña a los dueños (Alex y Stephen). Todo embebido (fuentes de Google, fotos en base64). Se construye con `python3 build.py` desde `src/demo.html` + `src/img/` (no editar `demo/index.html` a mano).
 - Publicado con GitHub Pages desde `main` (root). URL: `https://crpozo.github.io/district-leathers/demo/`. `index.html` en la raíz redirige a `/demo/`.
+- Pantallas de la demo (numeración del brief): 0 página de producto · fitting room (1, 2, 10, 11 en un flujo de 3 pasos) · 3 calculadora · 8 comparar caída y ficha técnica · 9 mapa de corte (pantalón mujer M, lamb vs cow) · 5 proyecto a medida (cierre del flujo Corvette) · "More": 4 cuenta, 6 panel, 7 seguimiento como mockups estáticos. Barra de navegación de demo abajo (píldora oscura); también por hash (`#calc`, `#compare`...).
+- Ejemplos obligatorios cubiertos: bomber jacket (Nappa Lamb) y Corvette 1967 (dos asientos delanteros en cognac, Semi-Aniline Cow, termina en el formulario de proyecto con estimado de 2 pieles enteras).
 - Fase 1 (producción en su Shopify) no ha empezado. Falta cotización aprobada.
 
-## Flujo de la demo
-1. **Pick a leather**: tres tarjetas estilo "Best sellers" de su web (foto real del cuero teñida por color, nombre, tagline, precio, estrellas, muestras redondas). Tocar un color tiñe la foto y muestra "Continue with [color]" abajo a la derecha.
-2. **Describe your idea**: textarea + grilla "Or pick a District base pattern" (Jacket, Pants, Skirt, Bag, Chair/Sofa, Car seat) + ejemplos rápidos (bomber, wide-leg pants, two-seat sofa, 1967 Corvette seats). Aviso en vivo con el molde base detectado. Talla (Women/Men, XS–XXL) y merma (20/25/30%). Se ocultan para tapicería.
-3. **See it & buy**: imagen grande + panel "How many hides?" (rango, recomendado, mismo lote, descuento por volumen, envío gratis $250, nudge de piel extra, carrito). Debajo: "Change the leather" (muestras de todos los cueros en stock, regenera al tocar) y "Suggested palettes" (Classic, Coastal, Fall 26 → dos cueros lado a lado). Para tapicería: estimado desde tabla + formulario corto "Send to a District expert".
+## Flujo del fitting room (dentro de la demo)
+1. **Pick a leather**: cinco tarjetas estilo "Best sellers" de su web (foto real del cuero teñida por color, nombre, tagline, precio, estrellas, muestras redondas con foto). Tocar un color tiñe la foto y muestra "Continue with [color]".
+2. **Describe your idea**: textarea + "Or pick a District base pattern" (Jacket, Pants, Chair/Sofa, Car seat) + ejemplos rápidos (bomber, wide-leg pants, two-seat sofa, 1967 Corvette). Aviso en vivo con el molde base detectado. Talla (Women/Men, XS–XXL) y merma (20/25/30%). Se ocultan para tapicería.
+3. **See it & buy**: imagen grande (prenda sobre modelo, frente/espalda para el pantalón) + panel "How many hides?" (rango, recomendado, mismo lote, descuento por volumen, envío gratis $250, aviso de pieza larga, nudge de piel extra, carrito). Debajo: "Change the leather", "Suggested palettes", "Compare 2 leathers", y para el pantalón "Drape & spec sheet" (pantalla 8). Para tapicería: estimado desde tabla + "Send to a District expert" (pantalla 5).
 
 ## Decisiones de diseño
 - Replicar el estilo de districtleathers.com, no inventar: barra amarilla neón `#e9f33b` texto oscuro peso normal; cabecera `#333638` de 90px con monograma LD (L y D superpuestas), menú mayúsculas peso 500; fuente Raleway; títulos de producto mayúsculas peso 500; botones negros con texto blanco letterspaced; estrellas amarillas `#f2c21b`; muestras redondas con aro gris, negro la seleccionada.
 - Sin burbuja de chat ni etiquetas "New" en la demo.
 - UI en inglés (vive en su web). Conversación con Carlos en español.
-- Imágenes: la chaqueta es una foto real recortada del fondo, en escala de grises y teñida con el color del cuero (CSS `mix-blend-mode: multiply` con máscara). El resto de prendas aún son SVG; reemplazar por fotos reales cuando Carlos las mande (pantalón, falda, bolso, sofá, asiento). Generación de IA en vivo NO es posible en una página estática publicada; para la demo se usan imágenes pregeneradas. Figma `generate_image` dio buena calidad (prueba: bomber cognac) pero el entorno de Claude.ai no puede descargar de figma.com.
-- Cálculo: `sq ft = área de la prenda (tabla) × (1 + merma)`; `pieles = sq ft ÷ tamaño promedio de piel`. Mínimo = merma 5 puntos menos; ambos redondeados hacia arriba. Cow: combinación más barata que alcance (entera o medias). Tapicería: 1 yarda = 18 sq ft o tabla por mueble/auto. Las áreas por prenda en la demo son estimadas; las reales las dan Martín y Dan.
-- Datos reales de su web usados en la demo: Italian Nappa Lamb $64.99, 0.8 mm, 6–10 sq ft, 122 reseñas; Bambino Cow Lightweight $499.99, 1.2 mm, 32–40 sq ft; New England Thin Cow $529.99, 0.5 mm, 34–44 sq ft. Lotes, stock, paletas y "Upholstery Cow" son ejemplo.
+- Imágenes: todas son fotos generadas con IA (Figma `generate_image`, modelo gemini-3.1-flash-image), nunca siluetas SVG. Carlos quiere siempre este nivel: foto de producto o prenda sobre modelo, fondo blanco. Hay dos tipos: planas (bomber, pantalón fluido, pantalón estructurado, asientos Corvette, sofá) recortadas del fondo y en escala de grises con alfa; y sobre modelo (bomber, pantalón frente y espalda) generadas en gris neutro con una máscara solo de la prenda. En ambos casos el color del cuero se aplica en CSS (`mix-blend-mode: multiply` con máscara), así una sola foto sirve para todos los colores. Los originales están en `src/img/` y el proceso de recorte en el historial de la sesión (PIL: distancia al blanco para las planas; baja saturación + flood fill para las de modelo).
+- Resolución: las imágenes actuales vienen de las miniaturas de 256 px de Figma, escaladas a 768 px. El entorno de Claude bloquea www.figma.com, así que no se pudieron bajar las versiones de 1024 px. Las URLs (válidas 7 días desde el 11 oct 2026) están en `src/img/figma-fullres-urls.txt`; si se permite www.figma.com en la red del entorno, bajar y reprocesar.
+- IA en vivo: la demo puede generar en vivo si se guarda una API key en el dispositivo (5 toques en el logo LD o `#setup`): Gemini (`gemini-2.5-flash-image`, con la foto del cuero teñida como referencia) u OpenAI (`gpt-image-1` edits). Si no hay key, no hay internet, falla o tarda más de 75 s, cae a las imágenes pregeneradas sin que se note (misma animación de "Generating"). La key vive en localStorage del iPad, nunca en el repo. No está probado con una key real: probar antes de la demo con "Test now".
+- Cálculo: `sq ft = área de la prenda (tabla) × (1 + merma)`; `pieles = sq ft ÷ tamaño de piel`. Mínimo = con la piel promedio; recomendado = con la piel chica del rango (6–9 sq ft en lamb); ambos hacia arriba. Así chaqueta M = 4–5 (rec. 5) y pantalón M = 4–5 (rec. 5), como en el brief. Cow: combinación más barata que alcance (entera o medias). Tapicería: 1 yarda = 18 sq ft o tabla por mueble/auto. Las áreas por prenda en la demo son estimadas; las reales las dan Martín y Dan.
+- Cueros en la demo (5): Italian Nappa Lamb $64.99, 0.8 mm, 6–9 sq ft, 122 reseñas; Bambino Cow Lightweight $499.99, 1.2 mm, 32–40 sq ft; New England Thin Garment Weight Cow $529.99, 0.5 mm, 34–44 sq ft (datos reales de su web, del brief); Kid Skin Goat ($54.99) y Bambino Semi-Aniline Cow ($449.99, tapicería/auto) son nombres reales de su catálogo con precio, tamaño y caída de ejemplo, a confirmar. Lotes, stock, reseñas de goat/cow, paletas, pieza más larga y áreas por prenda son ejemplo. districtleathers.com no es accesible desde el entorno de Claude (DNS bloqueado), por eso no se pudieron verificar.
 
 ## Arquitectura decidida para Fase 1
 - NO es una web nueva ni rediseño. Se extiende su tema actual.
@@ -39,12 +43,13 @@ Brief original: `docs/Brief_Desarrollador_District.pdf` (Martín Flores, oct 202
 Tabla de consumo (prenda × mujer/hombre × XS–XXL), tabla de tapicería, pieza más larga por talla, mapas de corte (Dan), caída 1–5 y estiramiento por cuero, fotos de cueros, niveles de descuento, acceso de colaborador a la tienda, tienda de desarrollo, Shopify Partner de la empresa de Martín, NDA firmado.
 
 ## Pendientes inmediatos
-- Fotos reales de pantalón, falda, bolso, sofá y asiento para reemplazar los SVG.
-- Imágenes IA pregeneradas (3–4 ideas de respaldo por si falla internet en la demo).
-- Probar en iPad (es donde la van a enseñar).
+- Bajar las imágenes a 1024 px de Figma (ver URLs) o regenerarlas donde se puedan descargar, y reprocesar.
+- Probar en el iPad real (Safari): el recorrido se probó en Chromium a 1024×768 y 768×1024 sin errores de consola.
+- Probar la IA en vivo con una key real (Gemini u OpenAI) y medir el tiempo; decidir si se usa en la demo o solo las pregeneradas.
+- Confirmar con Martín precios y datos de Kid Skin Goat y Semi-Aniline Cow.
 - Cotización: precio cerrado de demo y de Fase 1, fecha más corta para cada una.
 
 ## Convenciones
 - Commits directos a `main`; Pages publica solo. Sin PRs.
-- Mantener `demo/index.html` autocontenido (un archivo, assets embebidos) hasta que empiece la Fase 1.
+- Mantener `demo/index.html` autocontenido (un archivo, assets embebidos) hasta que empiece la Fase 1. Editar `src/demo.html` y correr `python3 build.py`.
 - No usar em dashes en textos que vea el cliente.

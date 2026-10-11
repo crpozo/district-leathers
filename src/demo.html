@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>District Leathers · Imagine it in our leather</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --img-jacket:url({{IMG_JACKET}});--img-pants:url({{IMG_PANTS}});--img-pantscow:url({{IMG_PANTSCOW}});--img-seats:url({{IMG_SEATS}});--img-sofa:url({{IMG_SOFA}});--img-hide:url({{IMG_HIDE}});--img-mjacket:url({{IMG_MJACKET}});--img-mjacket-m:url({{IMG_MJACKET_M}});--img-mpantsf:url({{IMG_MPANTSF}});--img-mpantsf-m:url({{IMG_MPANTSF_M}});--img-mpantsb:url({{IMG_MPANTSB}});--img-mpantsb-m:url({{IMG_MPANTSB_M}});
+  --ink:#1c1c1c; --ink-2:#4a4a4a; --ink-3:#7a7a7a;
+  --paper:#ffffff; --paper-2:#f4f3ef; --paper-3:#e9e7e1; --line:#dcdad3;
+  --header:#333638; --announce:#e9f33b; --star:#f2c21b;
+  --ok:#2e7d32; --warn:#b3261e; --warn-bg:#fdf1ef; --tip-bg:#f3f6e2; --nudge:#fbfae6; --accent:#8b4a22;
+  --r:4px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#ffffff}}
+:root[data-theme="dark"]{--paper:#ffffff}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:Raleway,"Helvetica Neue",Arial,sans-serif;font-size:15px;line-height:1.45;-webkit-text-size-adjust:100%}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+a{color:inherit}
+img,svg{max-width:100%}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- store chrome (copied from districtleathers.com) ---------- */
+.announce{background:var(--announce);color:#222;font-weight:500;font-size:14px;text-align:center;padding:14px 10px;text-transform:uppercase}
+.hdr{background:var(--header);color:#fff;display:flex;align-items:center;gap:40px;padding:0 40px;height:90px;position:sticky;top:0;z-index:20}
+.logo{display:flex;align-items:center;gap:14px;text-decoration:none;line-height:1.15;background:none;border:0;padding:0;color:#fff}
+.logo .w1{font-weight:600;font-size:19px;letter-spacing:.28em}.logo .w2{font-weight:400;font-size:13px;letter-spacing:.3em;color:#e8e8e8}
+.nav{display:flex;gap:34px;font-size:16px;font-weight:500;text-transform:uppercase;margin-left:auto}
+.nav a{text-decoration:none;opacity:.92}
+.hdr .icons{margin-left:auto;display:flex;gap:24px;align-items:center}
+.nav+.icons{margin-left:0}
+.hdr .icons svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block}
+.cart{position:relative}
+.cart b{position:absolute;top:-8px;right:-10px;background:#fff;color:#222;font-size:10px;border-radius:10px;padding:0 5px;line-height:16px;min-width:16px;text-align:center}
+@media (max-width:1000px){.nav{gap:20px;font-size:13px}}
+@media (max-width:820px){.nav{display:none}.hdr{height:64px;padding:0 16px;gap:12px}.announce{font-size:11px;padding:9px 8px}}
+
+/* ---------- common ---------- */
+.wrap{max-width:1100px;margin:0 auto;padding:22px 20px 120px}
+.screen{display:none}.screen.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.screen.on{animation:none}}
+.crumbs{font-size:11px;color:var(--ink-3);margin-bottom:14px}
+.lbl{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin:0 0 8px}
+.h1{font-size:34px;font-weight:500;letter-spacing:.02em;text-transform:uppercase;margin:0 0 6px;line-height:1.1}
+.h2{font-size:15px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px}
+.muted{color:var(--ink-3);font-size:12px}
+.small{font-size:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--ink);color:#fff;border:1.5px solid var(--ink);padding:13px 18px;min-height:44px;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;border-radius:2px;width:100%;transition:background .15s}
+.btn:hover{background:#000}
+.btn.ghost{background:#fff;color:var(--ink)}.btn.ghost:hover{background:var(--paper-2)}
+.btn.sm{padding:9px 12px;width:auto;font-size:10px;min-height:40px}
+.btn.link{background:none;border:0;color:var(--ink);text-decoration:underline;width:auto;padding:6px 0;letter-spacing:.08em;min-height:0}
+.btn.auto{width:auto;min-width:220px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--ink);background:#fff;padding:8px 11px;min-height:36px;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-radius:2px}
+.chip.on{background:var(--ink);color:#fff}
+textarea,input[type=text],input[type=email],input[type=password],select{width:100%;border:1.5px solid var(--ink);padding:10px;border-radius:2px;background:#fff;font-size:14px}
+textarea{min-height:88px;resize:vertical}
+input::placeholder,textarea::placeholder{color:#9a9a9a}
+.card{border:1.5px solid var(--ink);padding:14px;border-radius:2px;background:#fff}
+.tag{display:inline-block;background:#fff;border:1px solid var(--ink);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:3px 6px}
+.ok{color:var(--ok);font-weight:600}.warn{color:var(--warn);font-weight:600}
+.note{background:var(--tip-bg);border:1px solid #d6dca3;padding:10px 12px;font-size:12px;border-radius:var(--r)}
+.nudge{background:var(--nudge);border:1px solid #e5e1a0;padding:9px 11px;font-size:12px;border-radius:var(--r)}
+.warnbox{background:var(--warn-bg);border:1px solid #f0c4bf;padding:9px 11px;font-size:12px;border-radius:var(--r)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.spacer{height:14px}
+hr.sep{border:0;border-top:1px solid var(--line);margin:14px 0}
+table.t{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+table.t th,table.t td{border:1px solid var(--line);padding:8px 9px;text-align:left;vertical-align:top}
+table.t th{background:var(--paper-2);font-weight:600;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.kv{display:grid;grid-template-columns:1fr auto;gap:4px 14px;font-size:12px;margin-top:8px}
+.kv b{font-weight:600}
+.big{font-size:44px;font-weight:700;line-height:1;margin:6px 0 2px}
+.big small{font-size:14px;letter-spacing:.1em;font-weight:600;margin-left:6px}
+.stars{color:var(--star);font-size:15px;letter-spacing:1px}.stars span{color:#444;font-size:13px;letter-spacing:0;margin-left:4px}
+.toolbar{background:var(--header);color:#fff;display:flex;align-items:center;padding:0 14px;height:44px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+.toolbar .back{background:none;border:0;color:#fff;font-size:20px;line-height:1;padding:0 14px 0 0;min-height:44px}
+.toolbar .t{flex:1;text-align:center}
+.toolbar .ld{border:1.5px solid #fff;padding:1px 4px;font-size:10px}
+.frame{border:1px solid var(--line);border-top:0;background:var(--paper)}
+.hero{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.hero .muted{max-width:560px}
+
+/* ---------- photo rendering: grayscale base tinted by the leather color ---------- */
+.ph{position:relative;width:100%;aspect-ratio:1/1;isolation:isolate;overflow:hidden}
+.ph .b,.ph .t{position:absolute;inset:0;background-position:center;background-size:contain;background-repeat:no-repeat}
+.ph .t{background-color:var(--tint,#8b4a22);background-image:none;mix-blend-mode:multiply;-webkit-mask-position:center;-webkit-mask-size:contain;-webkit-mask-repeat:no-repeat;mask-position:center;mask-size:contain;mask-repeat:no-repeat}
+.ph .g{position:absolute;inset:0;background:radial-gradient(circle at 38% 28%,rgba(255,255,255,.14),rgba(0,0,0,0) 55%);mix-blend-mode:screen;pointer-events:none}
+.ph.k-jacket .b{background-image:var(--img-jacket)}.ph.k-jacket .t{-webkit-mask-image:var(--img-jacket);mask-image:var(--img-jacket)}
+.ph.k-pants .b{background-image:var(--img-pants)}.ph.k-pants .t{-webkit-mask-image:var(--img-pants);mask-image:var(--img-pants)}
+.ph.k-pantscow .b{background-image:var(--img-pantscow)}.ph.k-pantscow .t{-webkit-mask-image:var(--img-pantscow);mask-image:var(--img-pantscow)}
+.ph.k-seats .b{background-image:var(--img-seats)}.ph.k-seats .t{-webkit-mask-image:var(--img-seats);mask-image:var(--img-seats)}
+.ph.k-sofa .b{background-image:var(--img-sofa)}.ph.k-sofa .t{-webkit-mask-image:var(--img-sofa);mask-image:var(--img-sofa)}
+.ph.k-mjacket .b{background-image:var(--img-mjacket)}.ph.k-mjacket .t{-webkit-mask-image:var(--img-mjacket-m);mask-image:var(--img-mjacket-m)}
+.ph.k-mpantsf .b{background-image:var(--img-mpantsf)}.ph.k-mpantsf .t{-webkit-mask-image:var(--img-mpantsf-m);mask-image:var(--img-mpantsf-m)}
+.ph.k-mpantsb .b{background-image:var(--img-mpantsb)}.ph.k-mpantsb .t{-webkit-mask-image:var(--img-mpantsb-m);mask-image:var(--img-mpantsb-m)}
+.ph.k-mjacket,.ph.k-mpantsf,.ph.k-mpantsb{aspect-ratio:671/900;border-radius:4px}
+.ph.k-mjacket .g,.ph.k-mpantsf .g,.ph.k-mpantsb .g{display:none}
+.viewtog{display:flex;justify-content:center;gap:6px;margin-top:10px}
+.ph.k-hide .b{background-image:var(--img-hide);background-size:cover;filter:grayscale(1) brightness(1.62) contrast(1.06)}
+.ph.k-hide .t{-webkit-mask-image:none;mask-image:none;background-size:cover}
+.ph.live .b{filter:none}.ph.live .t,.ph.live .g{display:none}
+.ph.live .b{background-size:contain}
+.sw{width:34px;height:34px;border-radius:50%;border:2px solid #d9d9d9;padding:0;background:none;position:relative;overflow:hidden;flex:none}
+.sw .ph{position:absolute;inset:0;border-radius:50%}
+.sw.on{border-color:#111}
+.sw.lg{width:44px;height:44px}
+.swatches{display:flex;flex-wrap:wrap;gap:8px}
+
+/* ---------- product page (screen 0) ---------- */
+.pp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:34px}
+.pp>div{min-width:0}
+@media (max-width:760px){.pp{grid-template-columns:1fr;gap:18px}}
+.pp .photo{position:relative;aspect-ratio:1/1;border-radius:var(--r);overflow:hidden;background:#eee}
+.pp .photo .ph{height:100%}
+.pp .photo .cap{position:absolute;bottom:8px;left:10px;color:#fff;font-size:10px;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.pp .ptitle{font-size:22px;font-weight:500;text-transform:uppercase;letter-spacing:.02em;margin:0 0 4px;color:#333638}
+.price{font-size:18px;font-weight:500;margin:6px 0 14px}
+.sizebtn{border:1.5px solid var(--ink);background:#fff;padding:10px 14px;min-height:40px;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.sizebtn.on{background:var(--ink);color:#fff}
+.qty{display:inline-flex;border:1.5px solid var(--ink);height:46px;align-items:center}
+.qty button{background:none;border:0;width:40px;height:100%;font-size:16px}
+.qty span{min-width:30px;text-align:center}
+.tabs{display:flex;gap:18px;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-top:18px;border-bottom:1px solid var(--line)}
+.tabs span{padding:8px 0;color:var(--ink-3)}
+.tabs span.on{color:var(--ink);border-bottom:2px solid var(--ink)}
+.toolblock{border:1.5px solid #c9a97a;background:#fcf8f2;padding:14px;margin-top:16px;border-radius:2px}
+.toolblock .row .btn{flex:1;min-width:200px}
+.gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:620px){.gallery{grid-template-columns:repeat(2,1fr)}}
+.gallery .gi{background:var(--paper-2);border-radius:var(--r);padding:10px}
+.gallery .c{font-size:11px;margin-top:6px}
+.gallery .c b{display:block;font-weight:600}
+
+/* ---------- fitting room (screens 1, 2, 10, 11) ---------- */
+.steps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);padding:0;margin:18px 0 26px;border-bottom:1px solid var(--line)}
+.steps li{display:flex;align-items:center;gap:10px;padding:12px 14px 12px 0;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;border-bottom:3px solid transparent;margin-bottom:-1px}
+.steps li b{width:26px;height:26px;border-radius:50%;border:1.5px solid #bbb;display:grid;place-items:center;font-size:12px;flex:none}
+.steps li.on{color:var(--ink);border-bottom-color:var(--ink)}
+.steps li.on b{background:var(--ink);color:#fff;border-color:var(--ink)}
+.steps li.done{color:var(--ink);cursor:pointer;border-bottom-color:#cfcfcf}
+.steps li.done b{background:var(--ink);color:#fff;border-color:var(--ink)}
+.steps li.done b::before{content:"✓";font-size:11px}
+.steps li.done b span{display:none}
+@media (max-width:620px){.steps li span{display:none}.steps li{padding:10px 6px 10px 0;gap:6px}}
+.step{display:none}.step.on{display:block}
+.stepnav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:22px;margin:6px 0 26px;align-items:start}
+.lc{text-align:center;border:1.5px solid transparent;padding:10px;border-radius:4px;transition:border-color .15s}
+.lc.sel{border-color:var(--ink)}
+.lc .img{aspect-ratio:1/1;overflow:hidden;border-radius:4px;background:#eee;position:relative;cursor:pointer}
+.lc .img .ph{height:100%}
+.lc .stock{position:absolute;top:10px;left:10px;background:#fff;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:4px 7px}
+.lc .name{font-size:15px;font-weight:500;text-transform:uppercase;letter-spacing:.02em;margin:12px 0 4px;color:#333638;min-height:2.4em}
+.lc .tag2{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#555}
+.lc .pr{font-size:14px;color:#444;margin:6px 0}
+.lc .swatches{justify-content:center;margin:10px 0 4px}
+.lc .cn{font-size:11px;color:#444;min-height:14px;margin-top:4px}
+.lc .m{font-size:11px;color:#777;margin-top:6px}
+.lc .best{font-size:11px;color:#666;margin-top:4px}
+.drapebar{display:inline-flex;gap:2px;vertical-align:middle;margin-left:6px}
+.drapebar i{width:9px;height:9px;border-radius:50%;background:#ddd}.drapebar i.f{background:#333}
+.ideaWrap{max-width:760px;margin:0 auto}
+.ideaWrap textarea{min-height:120px;font-size:16px;padding:16px}
+.picked{display:flex;align-items:center;gap:12px;margin-bottom:22px;font-size:13px}
+.patterns{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 6px}
+@media (max-width:620px){.patterns{grid-template-columns:repeat(2,1fr)}}
+.pt{background:#fff;border:1.5px solid var(--line);border-radius:4px;padding:14px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:44px}
+.pt svg{width:46px;height:46px;fill:none;stroke:#222;stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+.pt span{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.pt.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.ex{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.ex button{border:1px solid var(--line);background:#fff;padding:8px 11px;font-size:12px;border-radius:16px;color:var(--ink-2);min-height:36px}
+.dash{border:1.5px dashed #b9b9b9;background:#fff;padding:12px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;text-align:center;border-radius:2px;color:var(--ink-2);width:100%;min-height:44px}
+.live{background:var(--tip-bg);border:1px solid #d6dca3;padding:10px 12px;font-size:13px;border-radius:4px;margin:12px 0 0;display:flex;gap:10px;align-items:center}
+.live .ic{width:40px;height:40px;flex:none}
+.fitrow{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+@media (max-width:620px){.fitrow{grid-template-columns:1fr}}
+.sumbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:14px;padding:10px 12px;background:var(--paper-2);border-radius:4px}
+.sumbar .sep{color:#bbb}
+.result3{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start}
+@media (max-width:900px){.result3{grid-template-columns:1fr}}
+.stage{background:#f7f7f7;border-radius:4px;min-height:320px;max-height:520px;display:grid;place-items:center;position:relative;padding:20px}
+.stage .badge{position:absolute;top:12px;left:12px;background:#fff;border:1px solid var(--ink);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:4px 7px;z-index:3}
+.stage .ph{width:min(100%,420px);max-height:470px}
+.stage .ph.k-mjacket,.stage .ph.k-mpantsf,.stage .ph.k-mpantsb{width:min(100%,350px)}
+.stage .ph.wide{aspect-ratio:3/4}
+.stage.two .ph{max-height:420px}
+.stage.two{grid-template-columns:1fr 1fr;gap:12px}
+.stage.two figure{margin:0;text-align:center;min-width:0}
+.stage.two .ph{width:min(100%,260px);margin:0 auto}
+.stage figcaption{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:6px}
+.gen{display:none;position:absolute;inset:0;background:rgba(247,247,247,.94);place-items:center;border-radius:4px;z-index:4}
+.gen.on{display:grid}
+.gen>div{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:90%}
+.gen .bar{width:180px;height:4px;background:#ddd;border-radius:2px;overflow:hidden;margin:12px auto 0}
+.gen .bar i{display:block;height:100%;width:40%;background:var(--ink);animation:slide 1.1s infinite linear}
+@keyframes slide{from{transform:translateX(-100%)}to{transform:translateX(400%)}}
+.cap3{display:flex;justify-content:center;gap:40px;margin-top:8px;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.swg{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.swg .n{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;min-width:190px;color:#444}
+.pals{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:620px){.pals{grid-template-columns:1fr}}
+.pal{background:#fff;border:1.5px solid var(--line);border-radius:4px;padding:10px;text-align:left;min-height:44px}
+.pal.on{border-color:var(--ink)}
+.pal .d{display:flex;gap:4px;margin-bottom:6px}.pal .d i{width:18px;height:18px;border-radius:50%;display:block;border:1px solid rgba(0,0,0,.15)}
+.pal b{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.pal span{font-size:11px;color:#777}
+.expert input{margin-bottom:10px}
+
+/* ---------- calculator (3) ---------- */
+.calc{display:grid;grid-template-columns:340px minmax(0,1fr);gap:28px;padding:22px}
+@media (max-width:760px){.calc{grid-template-columns:1fr;padding:16px}}
+.calc .grp{margin-bottom:16px}
+.result{background:var(--paper-2);padding:18px;border-radius:var(--r)}
+.rec{display:inline-block;background:var(--ink);color:#fff;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:4px 7px;margin-left:8px;vertical-align:middle}
+
+/* ---------- compare (8) ---------- */
+.cmp-top{display:grid;grid-template-columns:1fr 1fr;gap:22px;padding:22px 22px 0}
+.cmp-top figure{margin:0;display:grid;grid-template-columns:180px 1fr;gap:14px;align-items:center;min-width:0}
+.cmp-top .stage{min-height:0;padding:10px;aspect-ratio:1/1}
+.cmp-top .stage .ph{width:100%}
+@media (max-width:760px){.cmp-top{grid-template-columns:1fr;padding:16px 16px 0}.cmp-top figure{grid-template-columns:130px 1fr}}
+.spec{padding:22px}
+.spec table.t td:first-child{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);width:150px}
+.spec tr.hl td{background:#f3f6e2}
+@media (max-width:620px){.spec table.t td:first-child{width:90px}}
+.dots{letter-spacing:2px}.dots i{font-style:normal;opacity:.22}
+.similar{margin:0 22px;background:var(--tip-bg);border:1px solid #d6dca3;padding:10px 12px;font-size:12px;border-radius:var(--r);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.similar span{flex:1;min-width:200px}
+
+/* ---------- cutting map (9) ---------- */
+.cut{display:grid;grid-template-columns:1fr 1fr;gap:22px;padding:22px}
+@media (max-width:760px){.cut{grid-template-columns:1fr;padding:16px}}
+.cut svg{width:100%;height:auto;background:var(--paper-2);border-radius:var(--r)}
+.legend{font-size:11px;color:var(--ink-2);display:flex;gap:14px;flex-wrap:wrap;padding:0 22px;align-items:center}
+.legend i{display:inline-block;width:12px;height:9px;background:#efe5d3;border:1px solid #9c8c70;vertical-align:middle;margin-right:4px}
+.legend u{text-decoration:none;border-bottom:2px dashed var(--warn);margin-right:4px;width:14px;display:inline-block}
+
+/* ---------- custom project (5) ---------- */
+.proj5{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;padding:22px}
+@media (max-width:760px){.proj5{grid-template-columns:1fr;padding:16px}}
+.proj5 .grp{margin-bottom:16px}
+.estimate{background:var(--paper-2);padding:14px;border-radius:var(--r)}
+.estimate .ph{width:100%;margin-bottom:8px}
+
+/* ---------- static screens (4, 6, 7) ---------- */
+.mocks{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.mock{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:#fff}
+.mock .toolbar{height:40px;font-size:10px}
+.mock .body{padding:14px;font-size:12px}
+.mock .body .lbl{margin-top:12px}
+.mock input,.mock textarea{font-size:12px;padding:8px;pointer-events:none}
+.proj{display:flex;gap:12px;align-items:center;border:1px solid var(--line);padding:8px;border-radius:var(--r);margin-top:8px}
+.proj .th{width:44px;height:44px;border-radius:3px;flex:none;overflow:hidden;background:var(--paper-2)}
+.proj .th .ph{height:100%}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media (max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{border:1px solid var(--line);padding:10px;border-radius:var(--r)}
+.kpi .n{font-size:24px;font-weight:700;line-height:1.1}
+.kpi .l{font-size:10px;color:var(--ink-3)}
+.panelgrid{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:12px;margin-top:12px}
+@media (max-width:900px){.panelgrid{grid-template-columns:1fr}}
+.barrow{font-size:11px;margin:6px 0}.barrow i{display:block;height:5px;background:var(--ink);border-radius:2px;margin-top:3px}
+.mock.wide{grid-column:1/-1}
+
+/* ---------- demo nav, toast, setup ---------- */
+.demonav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));background:var(--header);color:#fff;border-radius:30px;padding:6px 8px;display:flex;gap:2px;z-index:30;box-shadow:0 6px 24px rgba(0,0,0,.25);max-width:calc(100vw - 24px);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.demonav button{background:none;border:0;color:#fff;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:9px 11px;border-radius:20px;white-space:nowrap;opacity:.72;min-height:36px}
+.demonav button.on,.demonav button:hover{opacity:1;background:rgba(255,255,255,.14)}
+.demonav .dot{width:7px;height:7px;border-radius:50%;background:#777;align-self:center;margin:0 4px 0 6px;flex:none}
+.demonav .dot.live{background:#7ddc6a}
+.toast{position:fixed;top:calc(100px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%) translateY(-10px);background:var(--ink);color:#fff;padding:10px 16px;font-size:12px;border-radius:4px;opacity:0;pointer-events:none;transition:all .25s;z-index:40;max-width:90vw;text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;place-items:center;z-index:50;padding:16px}
+.modal.on{display:grid}
+.modal .box{background:#fff;max-width:520px;width:100%;padding:22px;border-radius:4px;max-height:90vh;overflow:auto}
+.modal .grp{margin-bottom:14px}
+@media (max-width:760px){
+  .wrap{padding:14px 14px 120px}
+  .h1{font-size:22px}
+  .stage{min-height:0;padding:12px}
+  .cap3{gap:16px;flex-wrap:wrap;font-size:11px}
+  .swg .n{min-width:0;width:100%}
+  .stepnav{flex-direction:column;align-items:stretch}
+  .stepnav .btn{width:100%!important;min-width:0!important}
+  .big{font-size:38px}
+}
+</style>
+</head>
+<body>
+
+<div class="announce">Free domestic shipping on all orders $250+ &nbsp;|&nbsp; Order processing time: 1–5 days</div>
+<header class="hdr">
+  <button class="logo" onclick="monoTap()" aria-label="District Leathers"><svg width="54" height="54" viewBox="0 0 54 54" aria-hidden="true"><path d="M11 6 V48 H31" fill="none" stroke="#fff" stroke-width="6"/><path d="M23 6 H31 a19 19 0 0 1 0 38 M23 6 V22" fill="none" stroke="#fff" stroke-width="6"/></svg><span><span class="w1">DISTRICT</span><br><span class="w2">LEATHERS</span></span></button>
+  <nav class="nav"><a href="#product" onclick="go('product');return false">Shop</a><a href="#" onclick="return false">Leather Buying Guide</a><a href="#" onclick="return false">Reviews</a><a href="#" onclick="return false">Book an appointment</a><a href="#" onclick="return false">About us</a></nav>
+  <div class="icons"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span class="cart"><svg viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><b id="cartN">0</b></span></div>
+</header>
+
+<main class="wrap">
+
+<!-- ============ SCREEN 0 · PRODUCT PAGE ============ -->
+<section class="screen" data-screen="product">
+  <div class="crumbs">Home › Lamb &amp; Calf Leather › Italian Nappa Lamb</div>
+  <div class="pp">
+    <div>
+      <div class="photo"><div id="ppPhoto"></div><span class="cap">Product photo from District's Shopify</span></div>
+    </div>
+    <div>
+      <h1 class="ptitle">Italian Nappa Lamb</h1>
+      <div class="stars">★★★★★<span>122 reviews</span></div>
+      <div class="price">$64.99</div>
+      <p class="lbl">Size</p>
+      <div class="row" style="margin-bottom:14px"><button class="sizebtn on">6-10 sqft hide</button><button class="sizebtn">Sample</button></div>
+      <p class="lbl">Color: <span id="ppColorName">Cognac</span></p>
+      <div class="swatches" id="ppSwatches" style="margin-bottom:16px"></div>
+      <div class="row" style="align-items:center;margin-bottom:18px"><div class="qty"><button onclick="qty(-1)">−</button><span id="ppQty">1</span><button onclick="qty(1)">+</button></div><button class="btn" style="flex:1;min-width:200px" onclick="addCart(+document.getElementById('ppQty').textContent,'Italian Nappa Lamb')">Add to cart</button></div>
+      <p class="lbl">Buy more, save more!</p>
+      <table class="t"><tr><th>Quantity</th><th>1–3</th><th>4–5</th><th>6+</th></tr><tr><td>Discount</td><td>—</td><td>5% off</td><td>10% off</td></tr></table>
+      <div class="muted" style="margin-top:4px">Example tiers. The tool reads District's real discount app.</div>
+      <div class="toolblock">
+        <div style="font-weight:600;font-size:13px;letter-spacing:.04em;text-transform:uppercase">Not sure how many hides you need?</div>
+        <div class="muted" style="margin:4px 0 12px">See this leather on your garment and get the number of hides for your size, from the same lot.</div>
+        <div class="row"><button class="btn" onclick="openCalc('nappa')">How many hides do I need?</button><button class="btn ghost" onclick="openFitting('nappa')">See it on my garment</button></div>
+        <div class="muted" style="margin-top:10px">0.8 mm · 1.5 oz · Hides 6–9 sq ft · Lot 214 · 14 hides in stock</div>
+      </div>
+      <div class="tabs"><span class="on">Description</span><span>Returns &amp; Exchanges</span></div>
+      <p class="small" style="margin-top:12px">Soft, buttery Italian lamb nappa for jackets, pants, linings and soft bags. About 0.8 mm (1.5 oz). Hides run 6 to 9 square feet. Sold by the hide; samples available.</p>
+    </div>
+  </div>
+  <hr class="sep">
+  <div class="hero"><div><h2 class="h2">Made with this leather</h2><div class="muted">Finished pieces by District customers, from photo reviews filtered for this product.</div></div></div>
+  <div class="gallery" id="ppGallery"></div>
+</section>
+
+<!-- ============ SCREENS 1, 2, 10, 11 · FITTING ROOM ============ -->
+<section class="screen" data-screen="fitting">
+  <div class="hero">
+    <div><h1 class="h1">Imagine it in our leather</h1><div class="muted">Pick a leather, describe what you want to make, and see it in that leather. Then get the number of hides for your size, from the same lot.</div></div>
+  </div>
+  <ol class="steps" id="steps">
+    <li data-s="1"><b><span>1</span></b><span>Pick a leather</span></li>
+    <li data-s="2"><b><span>2</span></b><span>Describe your idea</span></li>
+    <li data-s="3"><b><span>3</span></b><span>See it &amp; buy</span></li>
+  </ol>
+
+  <div class="step" data-step="1">
+    <div class="cards" id="leatherList"></div>
+    <div class="stepnav"><div class="muted" id="pickSummary">Tap a color to see it on the hide.</div><button class="btn auto" id="pickGo" onclick="goStep(2)" hidden>Continue ›</button></div>
+  </div>
+
+  <div class="step" data-step="2">
+    <div class="ideaWrap">
+      <div class="picked" id="picked2"></div>
+      <p class="lbl">What do you want to make?</p>
+      <textarea id="idea" aria-label="Describe your idea" placeholder="e.g. Cropped bomber jacket, oversized collar, silver zipper, ribbed cuffs"></textarea>
+      <p class="lbl" style="margin-top:16px">Or pick a District base pattern</p>
+      <div class="patterns" id="patterns">
+        <button class="pt" data-k="jacket"><svg viewBox="0 0 48 48"><path d="M17 8l7 4 7-4 8 5-3 9-4-1v19H16V21l-4 1-3-9z"/><path d="M24 12v28"/></svg><span>Jacket</span></button>
+        <button class="pt" data-k="pants"><svg viewBox="0 0 48 48"><path d="M15 6h18l3 36h-9l-3-20-3 20h-9z"/><path d="M15 12h18"/></svg><span>Pants</span></button>
+        <button class="pt" data-k="sofa"><svg viewBox="0 0 48 48"><path d="M8 22v12h32V22"/><path d="M12 22v-8h24v8"/><path d="M8 28h32M12 34v4M36 34v4"/></svg><span>Chair / Sofa</span></button>
+        <button class="pt" data-k="seats"><svg viewBox="0 0 48 48"><path d="M17 8c6 0 8 2 8 6l-2 16H15z"/><path d="M13 30h20c3 0 4 2 4 5v3H11v-3c0-3 1-5 2-5z"/><path d="M15 38v4M34 38v4"/></svg><span>Car seat</span></button>
+      </div>
+      <div class="ex">
+        <button onclick="setIdeaText('jacket')">Cropped bomber jacket</button>
+        <button onclick="setIdeaText('pants')">Wide-leg pants</button>
+        <button onclick="setIdeaText('sofa')">Two-seat sofa, cognac</button>
+        <button onclick="setIdeaText('corvette')">1967 Corvette, two front seats</button>
+      </div>
+      <button class="dash" onclick="toast('Phase 1: upload a photo, a sketch, a photo of the car, or your own pattern (DXF / PDF)')">+ or upload a photo, sketch or your own pattern (DXF / PDF)</button>
+      <div class="live" id="live"></div>
+      <div class="fitrow" id="fitrow">
+        <div><p class="lbl">Fit and size</p><div class="chips" id="cFit" style="margin-bottom:8px"></div><div class="chips" id="cSize"></div></div>
+        <div><p class="lbl">Your workshop's waste</p><div class="chips" id="cWaste"></div><div class="muted" style="margin-top:6px">Most garment workshops run 20–30%.</div></div>
+      </div>
+      <div class="stepnav"><button class="btn ghost auto" style="min-width:0" onclick="goStep(1)">‹ Back</button><button class="btn auto" onclick="generate()">Create · see it in this leather</button></div>
+    </div>
+  </div>
+
+  <div class="step" data-step="3">
+    <div class="sumbar" id="sumbar"></div>
+    <div class="result3">
+      <div>
+        <div class="stage" id="stage">
+          <span class="badge" id="badge">AI image · for inspiration</span>
+          <div id="imArt" style="width:100%;display:grid;place-items:center"></div>
+          <div class="gen" id="gen"><div><div style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase" id="genText">Generating…</div><div class="bar"><i></i></div><div class="muted" style="margin-top:8px;min-height:18px" id="genSub">Studio photo · plain background · District leather as texture reference</div></div></div>
+        </div>
+        <div class="cap3" id="cap3"></div>
+        <div class="viewtog" id="viewtog"></div>
+        <p class="lbl" style="margin-top:16px">Change the leather</p>
+        <div id="sw3"></div>
+        <div class="muted" style="margin-top:6px">Only leathers in stock. Tap to see it in that color.</div>
+        <p class="lbl" style="margin-top:16px">Suggested palettes</p>
+        <div class="pals" id="pals"></div>
+        <div class="row" style="margin-top:14px">
+          <button class="btn sm ghost" onclick="compareTwo()">Compare 2 leathers</button>
+          <button class="btn sm ghost" onclick="goStep(2)">Edit idea</button>
+          <button class="btn sm ghost" id="btnCompareFull" onclick="go('compare')">Drape &amp; spec sheet</button>
+        </div>
+        <div class="muted" style="margin-top:8px">Images are private to your District account. A few per day are included.</div>
+      </div>
+      <div id="nextStep"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCREEN 3 · CALCULATOR ============ -->
+<section class="screen" data-screen="calc">
+  <div class="toolbar"><button class="back" onclick="go('product')">‹</button><span class="t">How many hides?</span><span class="ld">LD</span></div>
+  <div class="frame calc">
+    <div>
+      <div class="grp"><p class="lbl">Garment</p><div class="chips" id="kGarment"></div></div>
+      <div class="grp" id="kFitWrap"><p class="lbl">Fit and size</p><div class="chips" id="kFit" style="margin-bottom:8px"></div><div class="chips" id="kSize"></div></div>
+      <div class="grp" id="kWasteWrap"><p class="lbl">Your workshop's waste</p><div class="chips" id="kWaste"></div></div>
+      <div class="grp"><p class="lbl">Leather</p><div class="chips" id="kLeather"></div></div>
+      <div class="grp"><p class="lbl">Color</p><div class="swatches" id="kColor"></div></div>
+    </div>
+    <div id="kResult"></div>
+  </div>
+</section>
+
+<!-- ============ SCREEN 8 · COMPARE ============ -->
+<section class="screen" data-screen="compare">
+  <div class="toolbar"><button class="back" onclick="go('fitting')">‹</button><span class="t">Compare · Pants · Women M</span><span class="ld">LD</span></div>
+  <div class="frame">
+    <div class="cmp-top" id="cmpTop"></div>
+    <div class="spec" id="cmpSpec"></div>
+    <div class="similar" id="cmpSimilar"></div>
+    <div class="row" style="padding:18px 22px 22px"><button class="btn ghost" style="flex:1;min-width:220px" onclick="go('cutmap')">See cutting map</button><button class="btn" style="flex:1;min-width:220px" onclick="openCalc(CMP.right,'pants')">How many hides do I need?</button></div>
+  </div>
+</section>
+
+<!-- ============ SCREEN 9 · CUTTING MAP ============ -->
+<section class="screen" data-screen="cutmap">
+  <div class="toolbar"><button class="back" onclick="go('compare')">‹</button><span class="t">Cutting map · Pants · Women M · ~30 sq ft</span><span class="ld">LD</span></div>
+  <div class="frame">
+    <div class="cut" id="cutMap"></div>
+    <div class="legend"><span><i></i>Pattern piece</span><span><u></u>Extra seam</span><span><b>A</b> front leg · <b>B</b> back leg · <b>C</b> waistband · <b>D</b> pocket · 1/2 = top / bottom half</span><span style="margin-left:auto"><span style="display:inline-block;width:70px;border-bottom:2px solid var(--ink);vertical-align:middle;margin-right:4px"></span>1 m · same scale</span></div>
+    <div class="muted" style="padding:8px 22px 0">Pre-built layouts per garment, fit and size, drawn once by the pattern maker. Not a live nesting calculation. Real hides vary; the workshop does the final cut.</div>
+    <div class="row" style="padding:18px 22px 22px"><button class="btn ghost" style="flex:1;min-width:180px" onclick="go('compare')">Back to compare</button><button class="btn" style="flex:1;min-width:180px" onclick="addCart(5,'Italian Nappa Lamb · Black · Lot 214')">Add 5 lamb hides</button><button class="btn" style="flex:1;min-width:180px" onclick="addCart(1,'Bambino Cow Lightweight · Dark Brown · Lot 188')">Add 1 cow hide</button></div>
+  </div>
+</section>
+
+<!-- ============ SCREEN 5 · CUSTOM PROJECT ============ -->
+<section class="screen" data-screen="project">
+  <div class="toolbar"><button class="back" onclick="go('fitting')">‹</button><span class="t">Custom project</span><span class="ld">LD</span></div>
+  <div class="frame proj5">
+    <div id="projForm">
+      <h2 class="h2" style="font-size:18px">Tell us about your project. An expert replies with options.</h2>
+      <div class="grp"><p class="lbl">What is it?</p><div class="chips" id="pWhat"></div></div>
+      <div class="grp"><p class="lbl">Measurements or model</p><input type="text" id="pModel" placeholder="e.g. 1967 Corvette, 2 front seats + door panels"></div>
+      <div class="grp"><p class="lbl">Use</p><div class="chips" id="pUse"></div></div>
+      <div class="grp"><p class="lbl">Budget</p><div class="chips" id="pBudget"></div></div>
+      <div class="grp"><p class="lbl">Photos</p><button class="dash" onclick="toast('Phase 1: photos of the car or the piece go with the request')">+ Add photos</button></div>
+      <div class="grp"><p class="lbl">Notes</p><textarea id="pNotes" placeholder="Anything the expert should know"></textarea></div>
+      <div class="grp"><p class="lbl">Email</p><input type="email" id="pEmail" placeholder="you@shop.com"></div>
+      <button class="btn" onclick="sendProject()">Send to a District expert</button>
+      <div class="muted" style="margin-top:8px">The request arrives complete at the store's email and stays in the panel: image, car model, seats, use, budget and photos.</div>
+    </div>
+    <div><p class="lbl">Your project</p><div class="estimate" id="pEstimate"></div></div>
+  </div>
+</section>
+
+<!-- ============ SCREENS 4, 6, 7 · STATIC MOCKUPS ============ -->
+<section class="screen" data-screen="more">
+  <div class="hero"><div><h1 class="h1" style="font-size:24px">Phase 1 screens</h1><div class="muted">Saved projects, the owners' panel and the post-purchase follow-up. Shown as static mockups in the demo; they connect to Shopify accounts and Loox in Phase 1.</div></div></div>
+  <div class="mocks" id="mocks"></div>
+</section>
+
+</main>
+
+<nav class="demonav" id="demonav" aria-label="Demo screens">
+  <button data-go="product">0 · Product</button>
+  <button data-go="fitting">Fitting room</button>
+  <button data-go="calc">3 · Calculator</button>
+  <button data-go="compare">8 · Compare</button>
+  <button data-go="cutmap">9 · Cutting map</button>
+  <button data-go="project">5 · Project</button>
+  <button data-go="more">More</button>
+  <span class="dot" id="aiDot" title="AI: backups"></span>
+</nav>
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="setup">
+  <div class="box">
+    <h2 class="h2">Live AI setup</h2>
+    <div class="muted" style="margin-bottom:14px">Optional. With a key the demo generates the image live, using the leather photo as the color and grain reference. Without a key, or if the call fails or the iPad is offline, it falls back to the pregenerated images. The key stays on this device only.</div>
+    <div class="grp"><p class="lbl">Provider</p><select id="aiProvider"><option value="gemini">Google Gemini (image model, reference image supported)</option><option value="openai">OpenAI (gpt-image-1, edits with reference)</option></select></div>
+    <div class="grp"><p class="lbl">Model</p><input type="text" id="aiModel" placeholder="gemini-2.5-flash-image"></div>
+    <div class="grp"><p class="lbl">API key</p><input type="password" id="aiKey" placeholder="paste the key" autocomplete="off"></div>
+    <div class="grp"><label class="small"><input type="checkbox" id="aiOff"> Always use the pregenerated images (ignore the key)</label></div>
+    <div class="row"><button class="btn sm" onclick="saveSetup()">Save</button><button class="btn sm ghost" onclick="testSetup()">Test now</button><button class="btn sm ghost" onclick="document.getElementById('setup').classList.remove('on')">Close</button></div>
+    <div class="muted" id="aiStatus" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<script>
+/* ======================= DATA ======================= */
+/* Real District leathers. Prices and specs for Nappa Lamb, Bambino Cow Lightweight and New England Thin Cow come from
+   their site (brief). Kid Skin Goat and Semi-Aniline Cow prices, lots, stock and hide ranges are examples to confirm. */
+const LEATHERS={
+  nappa:{key:'nappa',name:'Italian Nappa Lamb',short:'Nappa Lamb',price:64.99,unit:'per hide',thick:'0.8 mm · 1.5 oz',drape:5,stretch:'Slight',low:6,high:9,avg:8,kind:'lamb',lot:214,stock:14,useful:90,wsq:.045,reviews:122,tag:'Supple | Smooth | Buttery',best:'Jackets, pants, linings, soft bags',
+    colors:[['Black','#1b1b1d'],['Off White','#e6e1d6'],['Navy','#1f2b45'],['Cognac','#8b4a22'],['Camel','#b48b57'],['Burgundy','#5e1e2a'],['Forest','#214032'],['Grey','#6f7075'],['Blush','#c89aa0'],['Red','#9b1c22']]},
+  goat:{key:'goat',name:'Kid Skin Goat',short:'Kid Goat',price:54.99,unit:'per hide',thick:'0.7 mm · 1.75 oz',drape:4,stretch:'Slight',low:5,high:7,avg:6,kind:'lamb',lot:233,stock:22,useful:75,wsq:.04,reviews:36,tag:'Fine grain | Strong | Light',best:'Jackets, skirts, small bags, gloves',
+    colors:[['Black','#1b1b1d'],['Cognac','#8b4a22'],['Tan','#b48b57'],['Navy','#1f2b45'],['Oxblood','#5e1e2a']]},
+  bambino:{key:'bambino',name:'Bambino Cow · Lightweight',short:'Bambino Cow',price:499.99,unit:'full hide',thick:'1.2 mm · 2–3 oz',drape:2,stretch:'None',low:32,high:40,avg:36,half:18,kind:'cow',lot:188,stock:6,useful:210,wsq:.067,reviews:41,tag:'Light | Structured | Full hides',best:'Structured pants, coats, bags',
+    colors:[['Dark Brown','#452718'],['Black','#1b1b1d'],['Cognac','#8b4a22'],['Tan','#b48b57']]},
+  newengland:{key:'newengland',name:'New England Thin Garment Weight Cow',short:'NE Thin Cow',price:529.99,unit:'full hide',thick:'0.5 mm · 1.25 oz',drape:5,stretch:'Slight',low:34,high:44,avg:39,half:19.5,kind:'cow',lot:240,stock:4,useful:215,wsq:.03,reviews:19,tag:'Thin | Fluid | Full hides',best:'Fluid pants and jackets in one piece',
+    colors:[['Black','#1b1b1d'],['Chocolate','#3b2416'],['Cognac','#8b4a22'],['Navy','#1f2b45']]},
+  semi:{key:'semi',name:'Bambino Semi-Aniline Cow',short:'Semi-Aniline Cow',price:449.99,unit:'full hide',thick:'1.1 mm · 2.75 oz',drape:1,stretch:'None',low:45,high:55,avg:50,kind:'cow',lot:301,stock:9,useful:230,wsq:.075,reviews:18,tag:'Durable | Sun safe | Full hides',best:'Car seats, sofas, chairs',upholstery:true,
+    colors:[['Cognac','#8b4a22'],['Black','#1b1b1d'],['Tan','#b48b57'],['Oxblood','#5e1e2a'],['Cream','#e6e1d6']]}
+};
+/* Base patterns. area = net sq ft for women M (estimates; District's consumption table replaces them). longest = longest pattern piece in cm. */
+const GARMENTS={
+  jacket:{label:'bomber jacket, cropped',area:20,longest:65,type:'garment',img:'jacket'},
+  pants:{label:'pants, wide leg',area:24,longest:110,type:'garment',img:'pants'},
+  seats:{label:'2 front bucket seats',area:60,type:'upholstery',table:'auto',img:'seats',what:'Car interior'},
+  sofa:{label:'two-seat sofa',area:150,type:'upholstery',table:'furniture',img:'sofa',what:'Furniture'}
+};
+const IDEAS={jacket:'Cropped bomber jacket, oversized collar, silver zipper, ribbed cuffs',pants:'Wide-leg pants, high waist, straight hem',sofa:'Two-seat sofa, cognac leather, low back, tight seat',seats:'Two front bucket seats, horizontal pleats',corvette:'1967 Corvette interior, two front seats with horizontal pleats, cognac leather'};
+const SIZES={XS:.9,S:.95,M:1,L:1.08,XL:1.16,XXL:1.25};
+const TIERS=[[6,.10],[4,.05]];
+const PALETTES=[{n:'Classic',c:[['nappa',0],['nappa',3]]},{n:'Coastal',c:[['nappa',2],['nappa',1]]},{n:'Fall 26',c:[['nappa',5],['nappa',4]]}];
+const ACCESSORIES=[['card holder',1.5],['coin purse',1.2],['clutch',3]];
+const S={leather:'nappa',color:3,kind:null,generated:false,cart:0,fit:'women',size:'M',waste:.25,picked:false,pattern:null,patternFilled:false,liveImg:null};
+const K={kind:'jacket',leather:'nappa',color:0,fit:'women',size:'M',waste:.25};
+const CMP={left:'nappa',right:'bambino'};
+const PRJ={what:'Car interior',use:'Daily use, sun',budget:'$500–1,500',kind:'seats',leather:'semi',color:0,hides:2};
+
+/* ======================= HELPERS ======================= */
+const $=id=>document.getElementById(id);
+const money=n=>'$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),2600);}
+function tintHex(hex){const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);const lum=(.2126*r+.7152*g+.0722*b)/255;if(lum<.12){const k=.16;return `rgb(${Math.round(r+(255-r)*k)},${Math.round(g+(255-g)*k)},${Math.round(b+(255-b)*k)})`;}return hex;}
+function photo(kind,hex,extra=''){return `<div class="ph k-${kind} ${extra}" style="--tint:${tintHex(hex)}"><div class="b"></div><div class="t"></div><div class="g"></div></div>`;}
+function livePhoto(dataUrl){return `<div class="ph live"><div class="b" style="background-image:url(${dataUrl})"></div></div>`;}
+function swatch(hex,on,title){return `<button class="sw${on?' on':''}" title="${title||''}" aria-label="${title||''}">${photo('hide',hex)}</button>`;}
+function dots(n){return '<span class="drapebar">'+[1,2,3,4,5].map(i=>`<i class="${i<=n?'f':''}"></i>`).join('')+'</span>';}
+function drapeWord(n){return n<=2?'structured':n>=4?'fluid':'medium';}
+function addCart(n,what){S.cart+=n;$('cartN').textContent=S.cart;toast(`Added ${n} × ${what} to cart`);}
+function chips(id,items,cur,on){const el=$(id);el.innerHTML='';items.forEach(([v,l])=>{const b=document.createElement('button');b.className='chip'+(v===cur?' on':'');b.textContent=l;b.onclick=()=>on(v);el.appendChild(b);});}
+function imgFor(kind,leatherKey){const L=LEATHERS[leatherKey];if(kind==='pants'&&L.drape<=2)return 'pantscow';return GARMENTS[kind].img;}
+/* viewer: garments on a model (front/back), upholstery as product shots */
+function viewImg(kind,view){if(kind==='jacket')return 'mjacket';if(kind==='pants')return view==='back'?'mpantsb':'mpantsf';return GARMENTS[kind].img;}
+S.view='front';
+
+/* core rule: sq ft = net area × (1 + waste); hides = sq ft ÷ hide size. Range = hide size variance; recommended = the safe side. */
+function compute(kind,leatherKey,fit,size,waste){
+  const G=GARMENTS[kind],L=LEATHERS[leatherKey];
+  const area=G.type==='garment'?G.area*SIZES[size]*(fit==='men'?1.1:1):G.area;
+  const sq=area*(1+waste);
+  let min,rec,price=L.price,label,unitSq=L.avg,note='';
+  if(L.kind==='cow'){
+    const full=Math.ceil(sq/L.avg);
+    if(L.half&&Math.ceil(sq/L.half)*(L.price/2)<full*L.price){rec=min=Math.ceil(sq/L.half);price=L.price/2;label=rec>1?'half hides':'half hide';unitSq=L.half;note='Cheapest option that covers it: half hides.';}
+    else{rec=min=full;label=rec>1?'full hides':'full hide';note=`One ${L.low}–${L.high} sq ft hide fits every piece in one.`;}
+  }else{
+    min=Math.ceil(sq/L.avg);rec=Math.ceil(sq/L.low);label=rec>1?'hides':'hide';
+    note=`Hides run ${L.low}–${L.high} sq ft; ${rec} covers it even with small hides.`;
+  }
+  const disc=(TIERS.find(t=>rec>=t[0])||[0,0])[1];
+  let nudge=null;for(const [q,d] of TIERS.slice().reverse()){if(rec<q&&q-rec<=2&&d>disc){nudge={q,d,total:q*price*(1-d)};break;}}
+  const longOk=!G.longest||L.useful>=G.longest;
+  const leftover=Math.max(0,rec*unitSq-sq);
+  const acc=[];let left=leftover;for(const [n,a] of [ACCESSORIES[0],ACCESSORIES[1]]){const c=Math.min(4,Math.floor(left/(a*1.3)));if(c>0){acc.push(`${c} ${n}${c>1?'s':''}`);left-=c*a*1.3;}}
+  return {area,sq,min,rec,price,disc,total:rec*price*(1-disc),label,stockOk:L.stock>=rec,nudge,longOk,leftover,acc,weight:area*L.wsq,note};
+}
+
+/* ======================= AI (live with fallback) ======================= */
+const AI={
+  get cfg(){try{return JSON.parse(localStorage.getItem('dl_ai')||'{}');}catch(e){return{};}},
+  save(c){try{localStorage.setItem('dl_ai',JSON.stringify(c));}catch(e){}},
+  cache:{},
+  enabled(){const c=this.cfg;return !!(c.key&&!c.off);},
+  prompt(idea,L,cn){return `Professional e-commerce product photograph of ${idea}. The product is made of ${L.name} leather in the color ${cn}; use the attached leather swatch photo as the exact color, grain and sheen reference. Studio lighting, seamless plain pure white background, no people, no text, no logos, no brand marks, photorealistic, high detail.`;},
+  async refImage(hex){return new Promise(res=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=c.height=512;const x=c.getContext('2d');x.drawImage(img,0,0,512,512);x.globalCompositeOperation='multiply';x.fillStyle=tintHex(hex);x.fillRect(0,0,512,512);res(c.toDataURL('image/png'));};img.onerror=()=>res(null);img.src=HIDE_SRC;});},
+  async generate(idea,L,cn,hex,signal){
+    const c=this.cfg,prompt=this.prompt(idea,L,cn),ref=await this.refImage(hex);
+    if(c.provider==='openai'){
+      const fd=new FormData();fd.append('model',c.model||'gpt-image-1');fd.append('prompt',prompt);fd.append('size','1024x1024');fd.append('quality','medium');
+      if(ref){const blob=await (await fetch(ref)).blob();fd.append('image[]',blob,'leather.png');}
+      const r=await fetch('https://api.openai.com/v1/images/edits',{method:'POST',signal,headers:{Authorization:'Bearer '+c.key},body:fd});
+      const j=await r.json();if(!r.ok)throw new Error(j.error?.message||('HTTP '+r.status));
+      return 'data:image/png;base64,'+j.data[0].b64_json;
+    }
+    const model=c.model||'gemini-2.5-flash-image';
+    const parts=[{text:prompt}];if(ref)parts.push({inline_data:{mime_type:'image/png',data:ref.split(',')[1]}});
+    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,{method:'POST',signal,headers:{'Content-Type':'application/json','x-goog-api-key':c.key},body:JSON.stringify({contents:[{parts}],generationConfig:{responseModalities:['IMAGE']}})});
+    const j=await r.json();if(!r.ok)throw new Error(j.error?.message||('HTTP '+r.status));
+    const p=(j.candidates?.[0]?.content?.parts||[]).find(p=>p.inlineData||p.inline_data);if(!p)throw new Error('No image in response');
+    const d=p.inlineData||p.inline_data;return `data:${d.mimeType||d.mime_type||'image/png'};base64,${d.data}`;
+  }
+};
+let monoTaps=0,monoT;
+function monoTap(){monoTaps++;clearTimeout(monoT);monoT=setTimeout(()=>monoTaps=0,1500);if(monoTaps>=5){monoTaps=0;openSetup();}}
+function openSetup(){const c=AI.cfg;$('aiProvider').value=c.provider||'gemini';$('aiModel').value=c.model||'';$('aiKey').value=c.key||'';$('aiOff').checked=!!c.off;$('aiStatus').textContent=c.key?'A key is saved on this device.':'No key saved: the demo uses the pregenerated images.';$('setup').classList.add('on');}
+function saveSetup(){AI.save({provider:$('aiProvider').value,model:$('aiModel').value.trim(),key:$('aiKey').value.trim(),off:$('aiOff').checked});aiDot();$('aiStatus').textContent='Saved.';toast(AI.enabled()?'Live AI on (falls back to backups if it fails)':'Using pregenerated images');}
+async function testSetup(){saveSetup();if(!AI.enabled()){$('aiStatus').textContent='Nothing to test: no key or backups forced.';return;}$('aiStatus').textContent='Testing… (one small call)';try{const ctl=new AbortController();setTimeout(()=>ctl.abort(),90000);const L=LEATHERS.nappa;const url=await AI.generate('a small square leather swatch card',L,'Cognac','#8b4a22',ctl.signal);$('aiStatus').innerHTML=`OK. <img src="${url}" style="width:60px;height:60px;vertical-align:middle;margin-left:8px;border:1px solid #ddd">`;}catch(e){$('aiStatus').textContent='Failed: '+e.message;}}
+function aiDot(){const d=$('aiDot');d.classList.toggle('live',AI.enabled());d.title=AI.enabled()?'AI: live, with backups':'AI: pregenerated backups';}
+$('aiProvider').addEventListener('change',()=>{$('aiModel').placeholder=$('aiProvider').value==='openai'?'gpt-image-1':'gemini-2.5-flash-image';});
+
+/* ======================= NAVIGATION ======================= */
+function go(name,opts={}){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.dataset.screen===name));
+  document.querySelectorAll('.demonav button').forEach(b=>b.classList.toggle('on',b.dataset.go===name));
+  if(name==='product')renderProduct();
+  if(name==='calc')renderCalc();
+  if(name==='compare')renderCompare();
+  if(name==='cutmap')renderCut();
+  if(name==='project')renderProject();
+  if(name==='more')renderMocks();
+  if(history.replaceState)history.replaceState(null,'','#'+name);
+  if(!opts.keepScroll)window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.demonav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+function openCalc(leather,kind){if(leather)K.leather=leather;K.color=0;if(kind)K.kind=kind;if(S.kind&&!kind)K.kind=S.kind;K.fit=S.fit;K.size=S.size;K.waste=S.waste;go('calc');}
+function openFitting(leather){if(leather){S.leather=leather;S.color=PP.color;S.picked=true;}go('fitting');renderLeathers();goStep(S.picked?2:1);}
+
+/* ======================= SCREEN 0 · PRODUCT ======================= */
+const PP={color:3,qty:1};
+function qty(d){PP.qty=Math.max(1,PP.qty+d);$('ppQty').textContent=PP.qty;}
+function renderProduct(){
+  const L=LEATHERS.nappa,[cn,hex]=L.colors[PP.color];
+  $('ppPhoto').innerHTML=photo('hide',hex);$('ppPhoto').style.height='100%';
+  $('ppColorName').textContent=cn;
+  $('ppSwatches').innerHTML=L.colors.map(([n,h],i)=>swatch(h,i===PP.color,n)).join('');
+  [...$('ppSwatches').children].forEach((b,i)=>b.onclick=()=>{PP.color=i;S.color=i;renderProduct();});
+  const gal=[['mjacket',0,'Studio Rae','Bomber jacket','★★★★★'],['mpantsf',5,'M. Ortiz','Wide-leg pants','★★★★★'],['jacket',3,'Atelier K','Bomber','★★★★☆'],['mpantsb',2,'FIT student','Wide-leg pants','★★★★★']];
+  $('ppGallery').innerHTML=gal.map(([k,ci,who,what,st])=>`<div class="gi">${photo(k,L.colors[ci][1])}<div class="c"><span class="stars" style="font-size:11px">${st}</span><b>${who} · ${what}</b><span class="muted">${L.colors[ci][0]} · Nappa Lamb</span></div></div>`).join('');
+}
+
+/* ======================= FITTING ROOM ======================= */
+function renderLeathers(){
+  const el=$('leatherList');el.innerHTML='';
+  const ps=$('pickSummary'),pg=$('pickGo');const L0=LEATHERS[S.leather];
+  if(S.picked){ps.innerHTML=`Selected: <b>${L0.name} · ${L0.colors[S.color][0]}</b> · ${money(L0.price)} ${L0.unit}`;pg.hidden=false;pg.textContent=`Continue with ${L0.colors[S.color][0]} ›`;}else{ps.textContent='Tap a color to see it on the hide.';pg.hidden=true;}
+  Object.values(LEATHERS).forEach(L=>{
+    const sel=S.picked&&L.key===S.leather;const ci=sel?S.color:0;
+    const g=document.createElement('div');g.className='lc'+(sel?' sel':'');
+    g.innerHTML=`<div class="img">${photo('hide',L.colors[ci][1])}<span class="stock">${L.stock} in stock · lot ${L.lot}</span></div><div class="name">${L.name}</div><div class="tag2">${L.tag}</div><div class="pr">${money(L.price)} ${L.unit}</div><div class="stars">★★★★★<span>(${L.reviews})</span></div><div class="swatches"></div><div class="cn">${sel?L.colors[ci][0]:''}</div><div class="m">${L.thick} · drape ${drapeWord(L.drape)} ${dots(L.drape)}</div><div class="best">Best for: ${L.best}</div>`;
+    g.querySelector('.img').onclick=()=>{S.leather=L.key;S.color=ci;S.picked=true;renderLeathers();};
+    const w=g.querySelector('.swatches');
+    L.colors.forEach(([n,h],i)=>{const b=document.createElement('button');b.className='sw'+(sel&&i===S.color?' on':'');b.title=L.name+' · '+n;b.setAttribute('aria-label',b.title);b.innerHTML=photo('hide',h);b.onclick=()=>{S.leather=L.key;S.color=i;S.picked=true;renderLeathers();};w.appendChild(b);});
+    el.appendChild(g);
+  });
+}
+function setIdeaText(k){S.pattern=null;S.patternFilled=false;document.querySelectorAll('.pt').forEach(b=>b.classList.remove('on'));$('idea').value=IDEAS[k];if(['corvette','seats','sofa'].includes(k)&&!LEATHERS[S.leather].upholstery){S.leather='semi';S.color=0;S.picked=true;renderLeathers();}renderLive();}
+function pickPattern(k){S.pattern=k;document.querySelectorAll('.pt').forEach(b=>b.classList.toggle('on',b.dataset.k===k));const ta=$('idea');if(!ta.value.trim()||S.patternFilled){ta.value=IDEAS[k]||'';S.patternFilled=true;}if(['sofa','seats'].includes(k)&&!LEATHERS[S.leather].upholstery){S.leather='semi';S.color=0;S.picked=true;renderLeathers();}renderLive();}
+function renderFit(){chips('cFit',[['women','Women'],['men','Men']],S.fit,v=>{S.fit=v;renderFit();if(S.generated)renderNext();});chips('cSize',Object.keys(SIZES).map(s=>[s,s]),S.size,v=>{S.size=v;renderFit();if(S.generated)renderNext();});chips('cWaste',[[.2,'20%'],[.25,'25%'],[.3,'30%']],S.waste,v=>{S.waste=v;renderFit();if(S.generated)renderNext();});}
+function detectKind(){const t=$('idea').value.toLowerCase();if(S.pattern&&S.patternFilled)return S.pattern;
+  if(/sofa|couch|settee|loveseat|chair|armchair|ottoman|bench/.test(t))return 'sofa';
+  if(/corvette|seat|car |car$|interior|upholster|bucket|mustang|porsche/.test(t))return 'seats';
+  if(/pant|trouser|jean|legging/.test(t))return 'pants';
+  return 'jacket';}
+function renderLive(){const t=$('idea').value.trim();const el=$('live');const fr=$('fitrow');
+  if(!t){el.innerHTML='<span class="muted">Describe the piece or pick an example. We detect the product type and pick the closest District base pattern.</span>';fr.style.display='none';return;}
+  const k=detectKind();const L=LEATHERS[S.leather],[cn,hex]=L.colors[S.color];const G=GARMENTS[k];
+  el.innerHTML=`<span class="ic">${photo(imgFor(k,S.leather),hex)}</span><span>Closest base pattern: <b>${G.label}</b>${G.type==='upholstery'?" · estimated from District's upholstery table":''}. <span class="muted">${G.type==='upholstery'?'Finishes with a request to a District expert.':"We'll tell you how many hides for your size."}</span></span>`;
+  fr.style.display=G.type==='upholstery'?'none':'grid';}
+function goStep(n){document.querySelectorAll('.step').forEach(s=>s.classList.toggle('on',+s.dataset.step===n));
+  document.querySelectorAll('.steps li').forEach(li=>{const s=+li.dataset.s;li.classList.toggle('on',s===n);li.classList.toggle('done',s<n);});
+  const L=LEATHERS[S.leather],[cn,hex]=L.colors[S.color];
+  $('picked2').innerHTML=`<span class="sw on">${photo('hide',hex)}</span><span><b>${L.name} · ${cn}</b><br><span class="muted">${L.thick} · drape ${L.drape}/5 · lot ${L.lot} · ${L.stock} in stock</span></span><button class="btn link" style="margin-left:auto" onclick="goStep(1)">Change</button>`;
+  $('sumbar').innerHTML=`<span class="sw on">${photo('hide',hex)}</span><b>${L.name} · ${cn}</b><span class="sep">|</span><span>${S.kind?GARMENTS[S.kind].label:''}</span>${S.kind&&GARMENTS[S.kind].type==='garment'?`<span class="sep">|</span><span>${S.fit==='women'?'Women':'Men'} ${S.size} · ${Math.round(S.waste*100)}% waste</span>`:''}`;
+  if(n===2)renderLive();window.scrollTo({top:0,behavior:'smooth'});}
+
+let genRun=0;
+async function generate(){
+  const idea=$('idea').value.trim();if(!idea){toast('Describe what you want to make first');return;}
+  S.kind=detectKind();if(GARMENTS[S.kind].type==='upholstery'&&!LEATHERS[S.leather].upholstery){S.leather='semi';S.color=0;S.picked=true;renderLeathers();}
+  goStep(3);const run=++genRun;
+  const L=LEATHERS[S.leather],[cn,hex]=L.colors[S.color];
+  const st=$('stage');st.classList.remove('two');const a=$('imArt');a.innerHTML='';
+  $('genText').textContent=`Generating in ${L.name} · ${cn}…`;
+  const g=$('gen');g.classList.add('on');const sub=$('genSub');
+  const msgs=['Reading the leather photo: grain, color, sheen…','Building the '+GARMENTS[S.kind].label+' from your description…','Rendering in studio light…'];msgs.forEach((m,i)=>setTimeout(()=>{if(run===genRun)sub.textContent=m;},i*700));
+  const key=[S.kind,S.leather,S.color,idea].join('|');
+  let live=AI.cache[key]||null,why='';
+  if(!live&&AI.enabled()&&navigator.onLine){
+    try{const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),75000);live=await AI.generate(idea,L,cn,hex,ctl.signal);clearTimeout(to);AI.cache[key]=live;}
+    catch(e){why=e.name==='AbortError'?'timed out':e.message;console.warn('Live AI failed, using backup:',why);}
+  }else if(!live){await new Promise(r=>setTimeout(r,1700));}
+  if(run!==genRun)return;
+  g.classList.remove('on');S.generated=true;S.liveImg=live;
+  a.innerHTML=live?livePhoto(live):photo(viewImg(S.kind,S.view),hex);
+  $('badge').textContent=live?'AI image · live · for inspiration':'AI image · for inspiration';
+  if(why)toast('Live generation failed ('+why+'). Showing the pregenerated image.');
+  renderStep3();renderNext();
+}
+function compareTwo(){
+  const L=LEATHERS[S.leather],[cn,hex]=L.colors[S.color];const altKey=S.leather==='nappa'?'bambino':'nappa';const alt=LEATHERS[altKey];const ai=S.leather==='nappa'?0:3;const [an,ah]=alt.colors[ai];
+  $('stage').classList.add('two');const a=$('imArt');a.style.display='contents';
+  a.innerHTML=`<figure>${photo(viewImg(S.kind,S.view),hex)}<figcaption>${cn} · ${L.short}</figcaption></figure><figure>${photo(viewImg(S.kind,S.view),ah)}<figcaption>${an} · ${alt.short}</figcaption></figure>`;
+  $('badge').textContent='AI images · for inspiration';
+  renderStep3({n:'',c:[[S.leather,S.color],[altKey,ai]]});
+}
+function renderStep3(pal){
+  const L=LEATHERS[S.leather],[cn]=L.colors[S.color];const up=GARMENTS[S.kind].type==='upholstery';
+  $('cap3').innerHTML=pal?pal.c.map(([k,i])=>`<span><b>${LEATHERS[k].colors[i][0]}</b> · ${LEATHERS[k].short}</span>`).join(''):`<span><b>${cn}</b> · ${L.short}</span>`;
+  $('btnCompareFull').style.display=S.kind==='pants'?'':'none';
+  const vt=$('viewtog');vt.innerHTML='';if(!pal&&S.kind==='pants'&&!S.liveImg){[['front','Front'],['back','Back']].forEach(([v,l])=>{const b=document.createElement('button');b.className='chip'+(S.view===v?' on':'');b.textContent=l;b.onclick=()=>{S.view=v;$('imArt').innerHTML=photo(viewImg(S.kind,v),L.colors[S.color][1]);renderStep3();};vt.appendChild(b);});}
+  const w=$('sw3');w.innerHTML='';
+  Object.values(LEATHERS).forEach(LL=>{if(up!==!!LL.upholstery)return;const g=document.createElement('div');g.className='swg';g.innerHTML=`<span class="n">${LL.name}</span><div class="swatches"></div>`;const ws=g.querySelector('.swatches');
+    LL.colors.forEach(([n,hx],i)=>{const b=document.createElement('button');b.className='sw'+(!pal&&LL.key===S.leather&&i===S.color?' on':'');b.title=LL.name+' · '+n;b.innerHTML=photo('hide',hx);b.onclick=()=>{S.leather=LL.key;S.color=i;S.picked=true;renderLeathers();generate();};ws.appendChild(b);});w.appendChild(g);});
+  const ps=$('pals');ps.innerHTML='';
+  PALETTES.forEach(p=>{const b=document.createElement('button');b.className='pal'+(pal===p?' on':'');b.innerHTML=`<div class="d">${p.c.map(([k,i])=>`<i style="background:${LEATHERS[k].colors[i][1]}"></i>`).join('')}</div><b>${p.n}</b><span>${p.c.map(([k,i])=>LEATHERS[k].colors[i][0]).join(' + ')}</span>`;b.onclick=()=>showPalette(p);ps.appendChild(b);});
+}
+function showPalette(p){
+  $('stage').classList.add('two');const a=$('imArt');a.style.display='contents';
+  a.innerHTML=p.c.map(([k,i])=>{const L=LEATHERS[k];return `<figure>${photo(viewImg(S.kind,S.view),L.colors[i][1])}<figcaption>${L.colors[i][0]} · ${L.short}</figcaption></figure>`;}).join('');
+  $('badge').textContent='AI images · for inspiration';renderStep3(p);
+}
+function renderNext(){
+  const n=$('nextStep');const L=LEATHERS[S.leather],G=GARMENTS[S.kind],[cn]=L.colors[S.color];
+  if(G.type==='upholstery'){
+    const r=compute(S.kind,S.leather,S.fit,S.size,.25);const tbl=G.table==='auto'?"District's auto upholstery table":"District's furniture table (1 yard of fabric ≈ 18 sq ft)";
+    n.innerHTML=`<p class="lbl">Next step</p><div class="card"><div style="font-weight:600;font-size:13px">How many hides?</div><div class="muted">Closest base: <b>${G.label}</b></div><div class="big">${r.rec}<small>${r.label}</small></div><div class="muted">${G.area} sq ft from ${tbl} + 25% waste = ${Math.round(r.sq)} sq ft. Estimate only.</div>
+      <div class="small ${r.stockOk?'ok':'warn'}" style="margin-top:6px">${r.stockOk?'✓ Same lot '+L.lot+' · '+L.stock+' left':'✗ Only '+L.stock+' left in lot '+L.lot+'. Talk to District first.'}</div>
+      <div class="small ok">✓ ${r.rec} × ${money(r.price)} = ${money(r.total)}</div></div>
+      <div class="spacer"></div><button class="btn" onclick="startProject()">Send to a District expert</button>
+      <div class="muted" style="margin-top:8px">The request arrives with the image, car model or piece, use, budget and photos. Your project stays private.</div>`;return;}
+  const r=compute(S.kind,S.leather,S.fit,S.size,S.waste);
+  n.innerHTML=`<p class="lbl">Next step</p><div class="card"><div style="font-weight:600;font-size:13px">How many hides?</div><div class="muted">Closest base pattern: <b>${G.label}</b></div>
+    <div class="chips" style="margin:8px 0" id="nFit"></div><div class="chips" style="margin:0 0 8px" id="nSize"></div>
+    <div class="big">${r.min===r.rec?r.rec:r.min+'–'+r.rec}<small>${r.label}</small>${r.min!==r.rec?`<span class="rec">Recommended: ${r.rec}</span>`:''}</div>
+    <div class="muted">${Math.round(r.area)} sq ft + ${Math.round(S.waste*100)}% waste = ${Math.round(r.sq)} sq ft. ${r.note}</div>
+    <div class="small ${r.stockOk?'ok':'warn'}" style="margin-top:6px">${r.stockOk?'✓ Same lot '+L.lot+' · '+L.stock+' left':'✗ Only '+L.stock+' left in lot '+L.lot+'. Talk to District before buying.'}</div>
+    <div class="small ok">✓ ${r.rec} × ${money(r.price)}${r.disc?' · '+Math.round(r.disc*100)+'% off':''} = ${money(r.total)}${r.total>=250?' · free shipping':''}</div>
+    ${r.longOk?'':`<div class="warnbox" style="margin-top:8px">Legs will need a seam at the knee with this leather (longest piece ${G.longest} cm, hide ≈ ${L.useful} cm). <a href="#" onclick="go('cutmap');return false">See cutting map</a> or pick a bigger hide.</div>`}
+    ${r.nudge?`<div class="nudge" style="margin-top:10px"><b>Add ${r.nudge.q-r.rec} spare → ${r.nudge.q} for ${money(r.nudge.total)} (${Math.round(r.nudge.d*100)}% off).</b><br>Same lot, in case a piece needs recutting.</div>`:''}</div>
+    <div class="spacer"></div><button class="btn" onclick="addCart(${r.rec},'${L.short} · ${cn} · Lot ${L.lot}')">Add ${r.rec} ${r.label} to cart</button>
+    <div class="spacer"></div><button class="btn ghost" onclick="${S.kind==='pants'?"go('cutmap')":"toast('Cutting map for the jacket: Phase 1 (drawn by the pattern maker)')"}">See cutting map</button>
+    <div class="row" style="margin-top:10px"><button class="btn link" onclick="openCalc()">Full calculator</button><button class="btn link" onclick="toast('Saved to My District account (uses your Shopify login)')">Save project</button><button class="btn link" onclick="toast('Opens District chat with the leather, garment, size and calculation already written')">Chat with an expert</button></div>`;
+  chips('nFit',[['women','Women'],['men','Men']],S.fit,v=>{S.fit=v;renderFit();renderNext();});chips('nSize',Object.keys(SIZES).map(s=>[s,s]),S.size,v=>{S.size=v;renderFit();renderNext();});
+}
+function startProject(){const G=GARMENTS[S.kind];const r=compute(S.kind,S.leather,S.fit,S.size,.25);Object.assign(PRJ,{what:G.what,kind:S.kind,leather:S.leather,color:S.color,hides:r.rec,live:S.liveImg,model:S.kind==='seats'?'1967 Corvette, 2 front seats':''});go('project');}
+
+/* ======================= SCREEN 3 · CALCULATOR ======================= */
+function renderCalc(){
+  const L=LEATHERS[K.leather],G=GARMENTS[K.kind];
+  chips('kGarment',[['jacket','Jacket'],['pants','Pants'],['sofa','Chair / Sofa'],['seats','Car seat']],K.kind,v=>{K.kind=v;if(GARMENTS[v].type==='upholstery'&&!LEATHERS[K.leather].upholstery){K.leather='semi';K.color=0;}if(GARMENTS[v].type==='garment'&&LEATHERS[K.leather].upholstery){K.leather='nappa';K.color=0;}renderCalc();});
+  $('kFitWrap').style.display=G.type==='garment'?'':'none';$('kWasteWrap').style.display=G.type==='garment'?'':'none';
+  chips('kFit',[['women','Women'],['men','Men']],K.fit,v=>{K.fit=v;renderCalc();});
+  chips('kSize',Object.keys(SIZES).map(s=>[s,s]),K.size,v=>{K.size=v;renderCalc();});
+  chips('kWaste',[[.2,'20%'],[.25,'25%'],[.3,'30%']],K.waste,v=>{K.waste=v;renderCalc();});
+  chips('kLeather',Object.values(LEATHERS).filter(x=>G.type==='upholstery'?x.upholstery:!x.upholstery).map(x=>[x.key,x.short]),K.leather,v=>{K.leather=v;K.color=0;renderCalc();});
+  $('kColor').innerHTML=L.colors.map(([n,h],i)=>swatch(h,i===K.color,n)).join('');[...$('kColor').children].forEach((b,i)=>b.onclick=()=>{K.color=i;renderCalc();});
+  const waste=G.type==='garment'?K.waste:.25;const r=compute(K.kind,K.leather,K.fit,K.size,waste);const [cn,hex]=L.colors[K.color];
+  const ctx=G.type==='garment'?`${G.label} · ${K.fit==='women'?'Women':'Men'} ${K.size}`:G.label;
+  $('kResult').innerHTML=`<div class="result"><div class="muted">${ctx} · ${L.name} · ${cn} · Lot ${L.lot}</div>
+    <div class="big">${r.min===r.rec?r.rec:r.min+'–'+r.rec}<small>${r.label}</small>${r.min!==r.rec?`<span class="rec">Recommended: ${r.rec}</span>`:''}</div>
+    <div class="muted">${Math.round(r.area)} sq ft + ${Math.round(waste*100)}% waste = ${Math.round(r.sq)} sq ft ÷ ${L.low}–${L.high} sq ft per ${L.kind==='cow'?'hide':'hide'}. ${r.note}</div>
+    <div class="kv"><span>Same lot ${L.lot}</span><b class="${r.stockOk?'ok':'warn'}">${r.stockOk?'✓ '+L.stock+' hides left. The color matches.':'✗ Only '+L.stock+' left. Talk to District before buying.'}</b>
+    <span>${r.rec} × ${money(r.price)}${r.disc?' · '+Math.round(r.disc*100)+'% off':''}</span><b class="ok">${money(r.total)}${r.total>=250?' · free shipping':''}</b>
+    <span>Garment weight</span><b>≈ ${r.weight.toFixed(1)} kg</b>
+    ${G.longest?`<span>Longest piece ${G.longest} cm</span><b class="${r.longOk?'ok':'warn'}">${r.longOk?'✓ Fits in one piece (hide ≈ '+L.useful+' cm)':'✗ Needs a seam at the knee (hide ≈ '+L.useful+' cm)'}</b>`:''}</div>
+    ${r.nudge?`<div class="nudge" style="margin-top:12px"><b>Add ${r.nudge.q-r.rec} spare hide${r.nudge.q-r.rec>1?'s':''} → ${r.nudge.q} for ${money(r.nudge.total)} (${Math.round(r.nudge.d*100)}% off).</b><br>A spare from the same lot, in case a piece needs recutting.</div>`:''}
+    ${r.acc.length?`<div class="note" style="margin-top:10px"><b>Optional:</b> your leftover ≈ ${r.leftover.toFixed(0)} sq ft from the same lot is enough for ${r.acc.join(' and ')}.</div>`:''}
+    ${!r.longOk&&K.kind==='pants'?`<div class="warnbox" style="margin-top:10px">Want the legs in one piece? Compare with a full cow hide. <a href="#" onclick="CMP.left='${K.leather}';go('compare');return false">Compare</a></div>`:''}
+    </div>
+    <div class="spacer"></div>
+    <div class="row"><button class="btn" style="flex:1;min-width:200px" onclick="addCart(${r.rec},'${L.short} · ${cn} · Lot ${L.lot}')">Add ${r.rec} ${r.label} to cart</button>${K.kind==='pants'?`<button class="btn ghost" style="flex:1;min-width:200px" onclick="go('cutmap')">See cutting map</button>`:''}</div>
+    <div class="spacer"></div>
+    <div class="expert"><input type="email" placeholder="you@shop.com"><button class="btn ghost" onclick="toast('Calculation sent by email, with the lot and a link to reorder')">Send me this calculation</button></div>
+    <div class="row" style="margin-top:10px"><button class="btn link" onclick="toast('Opens District chat with the leather, garment, size and calculation already written')">Chat with an expert</button><button class="btn link" onclick="S.leather=K.leather;S.color=K.color;S.picked=true;S.kind=K.kind;openFitting()">See it on my garment</button></div>
+    <div class="muted" style="margin-top:12px">Rule: sq ft = garment area (District's table) × (1 + waste); hides = sq ft ÷ hide size. Minimum uses the average hide; recommended uses the small end of the range. Cow: cheapest combination that covers it (full or half hides).</div>`;
+}
+
+/* ======================= SCREEN 8 · COMPARE ======================= */
+function renderCompare(){
+  const A=LEATHERS[CMP.left],B=LEATHERS[CMP.right];const ca=A.colors[0],cb=B.colors[0];
+  const rA=compute('pants',A.key,'women','M',.25),rB=compute('pants',B.key,'women','M',.25);
+  const fig=(L,c,r)=>`<figure><div class="stage">${photo(imgFor('pants',L.key),c[1])}</div><div><div class="h2" style="margin-bottom:2px">${L.name}</div><div class="muted">${c[0]} · ${money(L.price)} ${L.unit}</div><span class="tag" style="background:var(--ink);color:#fff;margin:8px 0">${L.drape>=4?'Fluid drape':L.drape<=2?'Structured':'Medium drape'}</span><div class="small" style="margin-top:6px">${L.drape>=4?'Falls close to the body. Soft folds at knee and ankle.':'Holds its shape. Straight leg, crisp break at the hem.'}</div></div></figure>`;
+  $('cmpTop').innerHTML=fig(A,ca,rA)+fig(B,cb,rB);
+  const dd=n=>`<span class="dots">${[1,2,3,4,5].map(i=>i<=n?'●':'<i>●</i>').join('')}</span> ${n} · ${drapeWord(n)}`;
+  const hides=(L,r)=>`<b>${r.min===r.rec?r.rec:r.min+'–'+r.rec} ${r.label}</b> · ${r.longOk?'legs in one piece':'seam at the knee'}`;
+  $('cmpSpec').innerHTML=`<table class="t"><tr><td></td><th>${A.name}</th><th>${B.name}</th></tr>
+    <tr><td>Thickness</td><td>${A.thick}</td><td>${B.thick}</td></tr>
+    <tr><td>Drape</td><td>${dd(A.drape)}</td><td>${dd(B.drape)}</td></tr>
+    <tr><td>Stretch</td><td>${A.stretch}</td><td>${B.stretch}</td></tr>
+    <tr><td>Hide size</td><td>${A.low}–${A.high} sq ft${A.half?' full · '+A.half+' half':''}</td><td>${B.low}–${B.high} sq ft${B.half?' full · '+(B.low/2)+'–'+(B.high/2)+' half':''}</td></tr>
+    <tr class="hl"><td>For these pants</td><td>${hides(A,rA)}</td><td>${hides(B,rB)}</td></tr>
+    <tr><td>Garment weight</td><td>≈ ${rA.weight.toFixed(1)} kg</td><td>≈ ${rB.weight.toFixed(1)} kg</td></tr>
+    <tr><td>Leather cost</td><td>${rA.rec} × ${money(rA.price)} = ${money(rA.rec*rA.price)}</td><td>${rB.rec} × ${money(rB.price)} = ${money(rB.rec*rB.price)}</td></tr></table>`;
+  const sim=LEATHERS.newengland;
+  $('cmpSimilar').innerHTML=CMP.right==='newengland'?`<span><b>Back to the structured option?</b> Bambino Cow Lightweight · 1.2 mm · drape 2 · holds its shape · $499.99</span><button class="btn sm ghost" onclick="CMP.right='bambino';renderCompare()">Compare</button>`:`<span><b>Want lamb-like drape with the legs in one piece?</b> ${sim.name} · 0.5 mm · drape ${sim.drape} · full hide ${sim.low}–${sim.high} sq ft · ${money(sim.price)}</span><button class="btn sm ghost" onclick="CMP.right='newengland';renderCompare()">Compare</button>`;
+}
+
+/* ======================= SCREEN 9 · CUTTING MAP ======================= */
+function renderCut(){
+  const hide=(x,y,w,h,seed)=>{const k=seed%3;const d=k===0?`M${x+10} ${y+h*.35} C${x} ${y+h*.1} ${x+w*.3} ${y} ${x+w*.5} ${y+8} C${x+w*.75} ${y} ${x+w} ${y+h*.15} ${x+w-6} ${y+h*.5} C${x+w} ${y+h*.85} ${x+w*.7} ${y+h} ${x+w*.45} ${y+h-6} C${x+w*.2} ${y+h} ${x} ${y+h*.8} ${x+10} ${y+h*.35}Z`:k===1?`M${x+6} ${y+h*.4} C${x+8} ${y+h*.08} ${x+w*.35} ${y+4} ${x+w*.55} ${y+10} C${x+w*.8} ${y} ${x+w} ${y+h*.25} ${x+w-4} ${y+h*.55} C${x+w-8} ${y+h*.9} ${x+w*.6} ${y+h} ${x+w*.4} ${y+h-4} C${x+w*.15} ${y+h-6} ${x} ${y+h*.75} ${x+6} ${y+h*.4}Z`:`M${x+12} ${y+h*.3} C${x+4} ${y+h*.05} ${x+w*.4} ${y} ${x+w*.6} ${y+6} C${x+w*.85} ${y} ${x+w} ${y+h*.3} ${x+w-10} ${y+h*.6} C${x+w} ${y+h*.9} ${x+w*.65} ${y+h} ${x+w*.35} ${y+h-8} C${x+w*.1} ${y+h} ${x} ${y+h*.7} ${x+12} ${y+h*.3}Z`;return `<path d="${d}" fill="#5a3a26" stroke="#3b2416" stroke-width="1.5"/>`;};
+  const piece=(x,y,w,h,label,seam)=>`<g><path d="M${x} ${y} L${x+w} ${y} L${x+w-4} ${y+h} L${x+4} ${y+h}Z" fill="#efe5d3" stroke="#9c8c70" stroke-width="1"/>${seam?`<line x1="${x}" y1="${y+(seam==='top'?h:0)}" x2="${x+w}" y2="${y+(seam==='top'?h:0)}" stroke="#b3261e" stroke-width="2.5" stroke-dasharray="5 3"/>`:''}<text x="${x+w/2}" y="${y+h/2+4}" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2416">${label}</text></g>`;
+  // lamb: 5 hides, each leg cut in two at the knee
+  const lambHides=[[0,0,'A1','A1','top'],[150,0,'A2','A2','bottom'],[300,0,'B1','B1','top'],[75,120,'B2','B2','bottom'],[225,120,'C','D','']];
+  let lamb='';lambHides.forEach(([x,y,l1,l2,seam],i)=>{lamb+=hide(x+4,y+6,138,106,i);if(l1==='C'){lamb+=piece(x+22,y+26,76,16,'C','')+piece(x+22,y+46,76,16,'C','')+piece(x+106,y+26,24,44,'D','')+piece(x+22,y+70,36,30,'D','');}else{lamb+=piece(x+22,y+22,46,76,l1,seam)+piece(x+76,y+22,46,76,l2,seam);}});
+  const lambSvg=`<svg viewBox="0 0 450 240" aria-label="Lamb cutting map: 5 hides">${lamb}</svg>`;
+  // cow: one full hide, legs in one piece
+  const cow=`<svg viewBox="0 0 450 240" aria-label="Cow cutting map: 1 full hide"><path d="M40 90 C30 40 120 10 220 14 C330 10 420 30 430 95 C440 160 400 225 300 230 C200 236 90 226 60 190 C40 165 42 120 40 90Z" fill="#5a3a26" stroke="#3b2416" stroke-width="1.5"/>${piece(70,40,48,170,'A','')}${piece(126,40,48,170,'A','')}${piece(184,40,52,170,'B','')}${piece(246,40,52,170,'B','')}${piece(312,40,14,150,'C','')}${piece(332,40,14,150,'C','')}${piece(356,130,48,50,'D','')}${piece(356,60,48,50,'D','')}</svg>`;
+  const rA=compute('pants','nappa','women','M',.25),rB=compute('pants','bambino','women','M',.25);
+  $('cutMap').innerHTML=`<div><div class="h2">Italian Nappa Lamb · <span class="warn">${rA.rec} hides</span></div><div class="muted" style="margin-bottom:8px">A 6–9 sq ft hide is shorter than a leg. Each leg is cut in two and joined at the knee.</div>${lambSvg}</div>
+    <div><div class="h2">Bambino Cow · <span class="ok">${rB.rec} ${rB.label}</span></div><div class="muted" style="margin-bottom:8px">A 32–40 sq ft hide fits every leg in one piece. Or 2 half hides.</div>${cow}</div>`;
+}
+
+/* ======================= SCREEN 5 · CUSTOM PROJECT ======================= */
+function renderProject(){
+  chips('pWhat',[['Car interior','Car interior'],['Furniture','Furniture'],['Garment','Garment'],['Other','Other']],PRJ.what,v=>{PRJ.what=v;renderProject();});
+  chips('pUse',[['Daily use, sun','Daily use, sun'],['Decorative','Decorative']],PRJ.use,v=>{PRJ.use=v;renderProject();});
+  chips('pBudget',[['< $500','< $500'],['$500–1,500','$500–1,500'],['$1,500+','$1,500+']],PRJ.budget,v=>{PRJ.budget=v;renderProject();});
+  if(PRJ.model!=null&&!$('pModel').value)$('pModel').value=PRJ.model;
+  const L=LEATHERS[PRJ.leather],[cn,hex]=L.colors[PRJ.color],G=GARMENTS[PRJ.kind];
+  $('pEstimate').innerHTML=`${PRJ.live?livePhoto(PRJ.live):photo(G.img,hex)}<div style="font-weight:600;font-size:13px">${G.label}</div><div class="muted">${L.name} · ${cn} · Lot ${L.lot}</div><div class="big" style="font-size:34px">${PRJ.hides}<small>full hides</small></div><div class="muted">From District's ${G.table==='auto'?'auto upholstery':'furniture'} table + 25% waste. Estimate only; the expert confirms.</div><div class="small ok" style="margin-top:6px">✓ ${PRJ.hides} × ${money(L.price)} = ${money(PRJ.hides*L.price)} · ${L.stock} in stock</div>`;
+}
+function sendProject(){$('projForm').innerHTML=`<div class="note" style="font-size:14px"><b>Sent.</b> A District expert replies by email with options, usually within one business day. The request includes the AI image, the leather and lot, ${PRJ.what==='Car interior'?'the car model':'the measurements'}, use, budget and your photos. It also appears in the owners' panel.</div><div class="spacer"></div><button class="btn ghost auto" onclick="go('fitting');goStep(1)">Start another project</button>`;toast('Project sent to District');}
+
+/* ======================= SCREENS 4, 6, 7 · STATIC ======================= */
+function renderMocks(){
+  const N=LEATHERS.nappa;
+  $('mocks').innerHTML=`
+  <div class="mock"><div class="toolbar"><span class="back">‹</span><span class="t">My District account</span></div><div class="body">
+    <div class="h2" style="font-size:13px">Save your project</div>
+    <p class="lbl">Email</p><input type="email" placeholder="you@studio.com"><p class="lbl">Brand or studio</p><input type="text" placeholder="Your brand name">
+    <p class="lbl">I am a…</p><div class="chips"><span class="chip on">Designer</span><span class="chip">Student</span><span class="chip">Brand</span><span class="chip">Upholstery</span><span class="chip">Car interiors</span><span class="chip">Hobby</span></div>
+    <div class="muted" style="margin:8px 0">☐ Tell me when new lots of my leathers arrive</div><button class="btn">Save and send me the calculation</button>
+    <p class="lbl" style="margin-top:14px">Saved projects</p>
+    <div class="proj"><div class="th">${photo('jacket',N.colors[0][1])}</div><div style="flex:1"><b>Jacket · M</b><div class="muted">Nappa Lamb · Black · 5 hides · Lot 214</div></div><button class="btn sm ghost">Reorder</button></div>
+    <div class="proj"><div class="th">${photo('pants',N.colors[3][1])}</div><div style="flex:1"><b>Pants · M</b><div class="muted">Nappa Lamb · Cognac · 5 hides · Lot 214</div></div><button class="btn sm ghost">Reorder</button></div>
+    <div class="muted" style="margin-top:8px">Your designs are private. District only sees the leather, garment type and quantity.</div></div></div>
+  <div class="mock"><div class="toolbar"><span class="t">District Leathers · 14 days after delivery</span></div><div class="body">
+    <div class="h2" style="font-size:15px">How did your jacket turn out, Sofía?</div>
+    <div class="proj"><div class="th">${photo('hide',N.colors[0][1])}</div><div><b>Italian Nappa Lamb · Black</b><div class="muted">5 hides · Lot 214 · Jacket M</div></div></div>
+    <p class="lbl" style="margin-top:12px">Rate the leather</p><div class="stars" style="font-size:20px">★★★★★</div>
+    <p class="lbl" style="margin-top:12px">Show us your finished piece</p><div class="dash">+ Add a photo</div>
+    <textarea placeholder="What did you make? Any tips for other designers?" style="margin-top:8px"></textarea>
+    <div class="muted" style="margin:8px 0">☑ Show my photo in "Made with this leather" on the product page</div><button class="btn">Share my review</button>
+    <div class="muted" style="margin-top:6px">Sent and stored through Loox, District's review app.</div></div></div>
+  <div class="mock wide"><div class="toolbar"><span class="t" style="text-align:left">District Leathers · Panel</span><span class="tag" style="color:#fff;border-color:#fff">Last 30 days ▾</span></div><div class="body">
+    <div class="h2" style="font-size:15px;margin-bottom:10px">This month</div>
+    <div class="kpis"><div class="kpi"><div class="l">Calculations</div><div class="n">212</div><div class="l">Web and showroom</div></div><div class="kpi"><div class="l">New contacts</div><div class="n">38</div><div class="l">Email and brand</div></div><div class="kpi"><div class="l">Purchases from the tool</div><div class="n">27</div><div class="l">9 took the spare hide</div></div><div class="kpi"><div class="l">Custom projects</div><div class="n">6</div><div class="l">Car, furniture, other</div></div><div class="kpi"><div class="l">Reviews with photo</div><div class="n">11</div><div class="l">From follow-up emails</div></div></div>
+    <div class="panelgrid">
+      <div class="kpi"><div class="lbl">Most searched leathers</div><div class="barrow">Italian Nappa Lamb · Black<i style="width:100%"></i></div><div class="barrow">Italian Nappa Lamb · Cognac<i style="width:72%"></i></div><div class="barrow">Bambino Semi-Aniline Cow<i style="width:48%"></i></div><div class="barrow">Kid Skin Goat<i style="width:30%"></i></div><div class="muted" style="margin-top:6px">Most calculated: jacket, size M</div></div>
+      <div class="kpi"><div class="lbl">Who uses it</div><div class="kv" style="margin-top:0"><span>Designers</span><b>52%</b><span>Students</span><b>18%</b><span>Upholstery</span><b>12%</b><span>Brands</span><b>10%</b><span>Car interiors</span><b>6%</b><span>Hobby</span><b>2%</b></div></div>
+      <div class="kpi"><div class="lbl">Calculated but didn't buy</div><table class="t" style="font-size:11px"><tr><th>Brand</th><th>Type</th><th>Garment</th><th>Leather</th><th>When</th><th></th></tr><tr><td>Studio A</td><td>Designer</td><td>Jacket · M</td><td>Nappa · Black</td><td>2 days</td><td><button class="btn sm ghost" style="padding:4px 8px;min-height:0">Write</button></td></tr><tr><td>Brand B</td><td>Brand</td><td>Pants · S</td><td>Cow · Cognac</td><td>3 days</td><td><button class="btn sm ghost" style="padding:4px 8px;min-height:0">Write</button></td></tr><tr><td>Upholstery D</td><td>Car</td><td>Car seats</td><td>Semi-aniline · Tan</td><td>5 days</td><td><button class="btn sm ghost" style="padding:4px 8px;min-height:0">Write</button></td></tr></table></div>
+    </div><div class="muted" style="margin-top:8px">Example data. Customer data lives in Shopify; the panel only shows it. Export to CSV.</div></div></div>`;
+}
+
+/* ======================= INIT ======================= */
+const HIDE_SRC='{{IMG_HIDE}}';
+renderFit();renderLeathers();goStep(1);
+$('idea').addEventListener('input',()=>{S.patternFilled=false;S.pattern=null;document.querySelectorAll('.pt').forEach(b=>b.classList.remove('on'));renderLive();});
+document.querySelectorAll('.pt').forEach(b=>b.addEventListener('click',()=>pickPattern(b.dataset.k)));
+$('idea').addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='Enter')generate();});
+document.querySelectorAll('.steps li').forEach(li=>li.addEventListener('click',()=>{if(li.classList.contains('done'))goStep(+li.dataset.s);}));
+aiDot();
+(function(){const h=(location.hash||'').replace('#','');if(h==='setup'){go('product');openSetup();}else go(['product','fitting','calc','compare','cutmap','project','more'].includes(h)?h:'product');})();
+</script>
+</body>
+</html>
