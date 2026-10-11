@@ -1,0 +1,29 @@
+name: Fetch Figma AI assets
+# One-off helper: the Claude cloud environment cannot reach www.figma.com, GitHub runners can.
+# Downloads the full-resolution PNGs listed in src/img/figma-fullres-urls.txt into src/img/fullres/ and commits them.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download
+        run: |
+          mkdir -p src/img/fullres
+          while read -r name url; do
+            [ -z "$name" ] && continue
+            echo "$name <- $url"
+            curl -fsSL -o "src/img/fullres/$name.png" "$url"
+            file "src/img/fullres/$name.png"
+          done < src/img/figma-fullres-urls.txt
+          ls -la src/img/fullres
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/img/fullres
+          git commit -m "Add full-resolution Figma AI photos (fetched by workflow)" || echo "nothing to commit"
+          git push
