@@ -600,7 +600,7 @@ function patternSVG(P,small){
   const pocket=(x,y)=>`<path d="M${x+4} ${y} L${x+50} ${y} L${x+52} ${y+30} C${x+52} ${y+52} ${x+40} ${y+60} ${x+26} ${y+60} C${x+12} ${y+60} ${x+2} ${y+50} ${x+2} ${y+34} Z" ${st}/>`;
   return `<svg viewBox="0 0 360 420" style="background:#fff;border:1px solid var(--line);border-radius:4px" aria-label="Pattern pieces, pants women M"><g stroke="#ececec" stroke-width=".6">${[...Array(19)].map((_,i)=>`<line x1="${i*20}" y1="0" x2="${i*20}" y2="420"/>`).join('')}${[...Array(22)].map((_,i)=>`<line x1="0" y1="${i*20}" x2="360" y2="${i*20}"/>`).join('')}</g>
   ${front(8)}${lab(40,54,'A','front leg ×2')}${front(96)}${lab(128,54,'A','')}
-  ${back(184)}${lab(222,56,'B','back leg ×2')}${back(276)}${lab(314,56,'B','')}
+  ${back(184)}${lab(226,80,'B','back leg ×2')}${back(276)}${lab(318,80,'B','')}
   ${band(14,306)}${lab(89,318,'C','')}${band(14,330)}${lab(89,342,'C','')}${small?'':`<text x="89" y="362" font-size="8" text-anchor="middle" fill="#666">waistband ×2</text>`}
   ${pocket(186,302)}${lab(212,336,'D','')}${pocket(250,302)}${lab(276,336,'D','')}${small?'':`<text x="244" y="376" font-size="8" text-anchor="middle" fill="#666">pocket bag ×2</text>`}
   ${small?'':`<text x="14" y="396" font-size="9" fill="#666">${P.name} · ${P.pieces.reduce((n,p)=>n+p[2],0)} pieces · ${P.area} sq ft net · longest ${P.longest} cm</text><line x1="14" y1="410" x2="74" y2="410" stroke="#1c1c1c" stroke-width="2"/><text x="80" y="413" font-size="9" fill="#666">50 cm</text>`}</svg>`;}
