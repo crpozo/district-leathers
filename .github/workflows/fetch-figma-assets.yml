@@ -15,9 +15,9 @@ jobs:
           mkdir -p src/img/fullres
           while read -r name url; do
             [ -z "$name" ] && continue
+            if [ -s "src/img/fullres/$name.png" ]; then echo "$name: already present, skipping"; continue; fi
             echo "$name <- $url"
-            curl -fsSL -o "src/img/fullres/$name.png" "$url"
-            file "src/img/fullres/$name.png"
+            if curl -fsSL -o "src/img/fullres/$name.png" "$url"; then file "src/img/fullres/$name.png"; else echo "$name: download failed (expired URL?)"; rm -f "src/img/fullres/$name.png"; fi
           done < src/img/figma-fullres-urls.txt
           ls -la src/img/fullres
       - name: Commit

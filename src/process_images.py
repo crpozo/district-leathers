@@ -49,6 +49,12 @@ def model(name, seed, top, bot):
     im.save(f'{OUT}/{name}_base.jpg', quality=86, optimize=True)
     print(name, os.path.getsize(f'{OUT}/{name}_base.jpg') // 1024, 'KB base,', os.path.getsize(f'{OUT}/{name}_mask.png') // 1024, 'KB mask')
 
+def plain(name, height=900, quality=84):
+    im = Image.open(f'{SRC}/{name}.png').convert('RGB'); w, h = im.size
+    im.resize((round(w * height / h), height), Image.LANCZOS).save(f'{OUT}/{name}.jpg', quality=quality, optimize=True)
+    print(name, os.path.getsize(f'{OUT}/{name}.jpg') // 1024, 'KB')
+
 if __name__ == '__main__':
     for n, th in FLAT.items(): flat(n, th)
+    plain('sample_jacket')
     for n, (seed, top, bot) in MODEL.items(): model(n, seed, top, bot)
