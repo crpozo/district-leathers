@@ -172,6 +172,17 @@ table.t th{background:var(--paper-2);font-weight:600;font-size:10px;letter-spaci
 .ex{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
 .ex button{border:1px solid var(--line);background:#fff;padding:8px 11px;font-size:12px;border-radius:16px;color:var(--ink-2);min-height:36px}
 .dash{border:1.5px dashed #b9b9b9;background:#fff;padding:12px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;text-align:center;border-radius:2px;color:var(--ink-2);width:100%;min-height:44px}
+.upl{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:620px){.upl{grid-template-columns:1fr}}
+.ut{position:relative;text-align:left;background:#fff;border:1.5px dashed #b9b9b9;border-radius:4px;padding:12px 12px 12px;min-height:44px;display:flex;flex-direction:column;gap:4px}
+.ut b{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.ut span{font-size:11px;color:var(--ink-3)}
+.ut.on{border:1.5px solid var(--ink)}
+.tag.fin{position:absolute;top:-8px;right:8px;background:#e8d9a8;border-color:#e8d9a8;color:#3b2f10;font-style:normal}
+.uplprev{display:flex;gap:12px;align-items:center;margin-top:10px;background:var(--paper-2);padding:10px;border-radius:4px;font-size:13px}
+.uplprev img{width:64px;height:64px;object-fit:cover;border-radius:3px;background:#ddd}
+.uplprev .btn.link{margin-left:auto}
+.stage.two .ph.live{width:min(100%,300px);margin:0 auto}
 .live{background:var(--tip-bg);border:1px solid #d6dca3;padding:10px 12px;font-size:13px;border-radius:4px;margin:12px 0 0;display:flex;gap:10px;align-items:center}
 .live .ic{width:40px;height:40px;flex:none}
 .fitrow{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
@@ -367,7 +378,14 @@ table.t th{background:var(--paper-2);font-weight:600;font-size:10px;letter-spaci
         <button onclick="setIdeaText('sofa')">Two-seat sofa, cognac</button>
         <button onclick="setIdeaText('corvette')">1967 Corvette, two front seats</button>
       </div>
-      <button class="dash" onclick="toast('Phase 1: upload a photo, a sketch, a photo of the car, or your own pattern (DXF / PDF)')">+ or upload a photo, sketch or your own pattern (DXF / PDF)</button>
+      <p class="lbl" style="margin-top:16px">Or upload a file</p>
+      <div class="upl" id="upl">
+        <button class="ut" onclick="pickUpload('photo')"><b>Photo of a piece</b><span>Your jacket, your sofa, your car seat. We change the material to this leather.</span></button>
+        <button class="ut" onclick="pickUpload('sketch')"><b>Sketch or technical drawing</b><span>Becomes a realistic image in this leather.</span><i class="tag fin">Final version</i></button>
+        <button class="ut" onclick="pickUpload('pattern')"><b>Pattern · DXF or PDF</b><span>Exact sq ft, hides and cutting map from your pieces.</span><i class="tag fin">Final version</i></button>
+      </div>
+      <input type="file" id="uplFile" accept="image/*" hidden>
+      <div class="uplprev" id="uplPrev" hidden></div>
       <div class="live" id="live"></div>
       <div class="fitrow" id="fitrow">
         <div><p class="lbl">Fit and size</p><div class="chips" id="cFit" style="margin-bottom:8px"></div><div class="chips" id="cSize"></div></div>
@@ -556,7 +574,17 @@ function chips(id,items,cur,on){const el=$(id);el.innerHTML='';items.forEach(([v
 function imgFor(kind,leatherKey){const L=LEATHERS[leatherKey];if(kind==='pants'&&L.drape<=2)return 'pantscow';return GARMENTS[kind].img;}
 /* viewer: garments on a model (front/back), upholstery as product shots */
 function viewImg(kind,view){if(kind==='jacket')return 'mjacket';if(kind==='pants')return view==='back'?'mpantsb':'mpantsf';return GARMENTS[kind].img;}
-S.view='front';
+S.view='front';S.upload=null;
+const SAMPLE_PHOTO='{{IMG_SAMPLE}}';
+function pickUpload(t){
+  if(t!=='photo'){toast(t==='sketch'?'Final version: a sketch or technical drawing becomes a realistic image in this leather.':'Final version: a DXF or PDF pattern gives exact sq ft, hides and the cutting map.');return;}
+  const f=$('uplFile');f.value='';f.onchange=()=>{const file=f.files[0];if(!file)return;const rd=new FileReader();rd.onload=()=>setUpload(rd.result,file.name);rd.readAsDataURL(file);};
+  const pv=$('uplPrev');pv.hidden=false;pv.innerHTML=`<img src="${SAMPLE_PHOTO}" alt=""><span><b>Photo of a piece</b><br><span class="muted">Use the sample (a cotton bomber jacket) or a photo from this iPad.</span></span><span class="chips" style="margin-left:auto"><button class="chip" onclick="setUpload(SAMPLE_PHOTO,'sample-jacket.jpg')">Use sample</button><button class="chip" onclick="$('uplFile').click()">From this device</button></span>`;
+}
+function setUpload(dataUrl,name){S.upload={src:dataUrl,name};const ta=$('idea');if(!ta.value.trim()){ta.value='Same jacket as my photo, in this leather';S.pattern='jacket';S.patternFilled=true;}
+  document.querySelectorAll('.ut').forEach((b,i)=>b.classList.toggle('on',i===0));
+  const pv=$('uplPrev');pv.hidden=false;pv.innerHTML=`<img src="${dataUrl}" alt=""><span><b>Your photo</b> · ${name}<br><span class="muted">We keep the shape and change the material to the leather you picked.</span></span><button class="btn link" onclick="clearUpload()">Remove</button>`;renderLive();}
+function clearUpload(){S.upload=null;$('uplPrev').hidden=true;document.querySelectorAll('.ut').forEach(b=>b.classList.remove('on'));renderLive();}
 
 /* core rule: sq ft = net area × (1 + waste); hides = sq ft ÷ hide size. Range = hide size variance; recommended = the safe side. */
 function compute(kind,leatherKey,fit,size,waste){
@@ -586,19 +614,19 @@ const AI={
   save(c){try{localStorage.setItem('dl_ai',JSON.stringify(c));}catch(e){}},
   cache:{},
   enabled(){const c=this.cfg;return !!(c.key&&!c.off);},
-  prompt(idea,L,cn){return `Professional e-commerce product photograph of ${idea}. The product is made of ${L.name} leather in the color ${cn}; use the attached leather swatch photo as the exact color, grain and sheen reference. Studio lighting, seamless plain pure white background, no people, no text, no logos, no brand marks, photorealistic, high detail.`;},
+  prompt(idea,L,cn){if(S.upload)return `Edit the first attached photo: keep the garment's exact shape, cut, pose and framing, but change its material to ${L.name} leather in the color ${cn}, using the second attached leather swatch photo as the color, grain and sheen reference. Keep everything else in the photo unchanged. Photorealistic, no text, no logos.`;return `Professional e-commerce product photograph of ${idea}. The product is made of ${L.name} leather in the color ${cn}; use the attached leather swatch photo as the exact color, grain and sheen reference. Studio lighting, seamless plain pure white background, no people, no text, no logos, no brand marks, photorealistic, high detail.`;},
   async refImage(hex){return new Promise(res=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=c.height=512;const x=c.getContext('2d');x.drawImage(img,0,0,512,512);x.globalCompositeOperation='multiply';x.fillStyle=tintHex(hex);x.fillRect(0,0,512,512);res(c.toDataURL('image/png'));};img.onerror=()=>res(null);img.src=HIDE_SRC;});},
   async generate(idea,L,cn,hex,signal){
-    const c=this.cfg,prompt=this.prompt(idea,L,cn),ref=await this.refImage(hex);
+    const c=this.cfg,prompt=this.prompt(idea,L,cn),ref=await this.refImage(hex);const up=S.upload?S.upload.src:null;
     if(c.provider==='openai'){
       const fd=new FormData();fd.append('model',c.model||'gpt-image-1');fd.append('prompt',prompt);fd.append('size','1024x1024');fd.append('quality','medium');
-      if(ref){const blob=await (await fetch(ref)).blob();fd.append('image[]',blob,'leather.png');}
+      if(up){fd.append('image[]',await (await fetch(up)).blob(),'photo.jpg');}if(ref){const blob=await (await fetch(ref)).blob();fd.append('image[]',blob,'leather.png');}
       const r=await fetch('https://api.openai.com/v1/images/edits',{method:'POST',signal,headers:{Authorization:'Bearer '+c.key},body:fd});
       const j=await r.json();if(!r.ok)throw new Error(j.error?.message||('HTTP '+r.status));
       return 'data:image/png;base64,'+j.data[0].b64_json;
     }
     const model=c.model||'gemini-2.5-flash-image';
-    const parts=[{text:prompt}];if(ref)parts.push({inline_data:{mime_type:'image/png',data:ref.split(',')[1]}});
+    const parts=[{text:prompt}];if(up)parts.push({inline_data:{mime_type:up.slice(5,up.indexOf(';')),data:up.split(',')[1]}});if(ref)parts.push({inline_data:{mime_type:'image/png',data:ref.split(',')[1]}});
     const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,{method:'POST',signal,headers:{'Content-Type':'application/json','x-goog-api-key':c.key},body:JSON.stringify({contents:[{parts}],generationConfig:{responseModalities:['IMAGE']}})});
     const j=await r.json();if(!r.ok)throw new Error(j.error?.message||('HTTP '+r.status));
     const p=(j.candidates?.[0]?.content?.parts||[]).find(p=>p.inlineData||p.inline_data);if(!p)throw new Error('No image in response');
@@ -667,7 +695,7 @@ function detectKind(){const t=$('idea').value.toLowerCase();if(S.pattern&&S.patt
 function renderLive(){const t=$('idea').value.trim();const el=$('live');const fr=$('fitrow');
   if(!t){el.innerHTML='<span class="muted">Describe the piece or pick an example. We detect the product type and pick the closest District base pattern.</span>';fr.style.display='none';return;}
   const k=detectKind();const L=LEATHERS[S.leather],[cn,hex]=L.colors[S.color];const G=GARMENTS[k];
-  el.innerHTML=`<span class="ic">${photo(imgFor(k,S.leather),hex)}</span><span>Closest base pattern: <b>${G.label}</b>${G.type==='upholstery'?" · estimated from District's upholstery table":''}. <span class="muted">${G.type==='upholstery'?'Finishes with a request to a District expert.':"We'll tell you how many hides for your size."}</span></span>`;
+  el.innerHTML=`<span class="ic">${photo(imgFor(k,S.leather),hex)}</span><span>${S.upload?'From your photo: <b>jacket</b> detected. ':''}Closest base pattern: <b>${G.label}</b>${G.type==='upholstery'?" · estimated from District's upholstery table":''}. <span class="muted">${G.type==='upholstery'?'Finishes with a request to a District expert.':"We'll tell you how many hides for your size."}</span></span>`;
   fr.style.display=G.type==='upholstery'?'none':'grid';}
 function goStep(n){document.querySelectorAll('.step').forEach(s=>s.classList.toggle('on',+s.dataset.step===n));
   document.querySelectorAll('.steps li').forEach(li=>{const s=+li.dataset.s;li.classList.toggle('on',s===n);li.classList.toggle('done',s<n);});
@@ -685,8 +713,8 @@ async function generate(){
   const st=$('stage');st.classList.remove('two');const a=$('imArt');a.innerHTML='';
   $('genText').textContent=`Generating in ${L.name} · ${cn}…`;
   const g=$('gen');g.classList.add('on');const sub=$('genSub');
-  const msgs=['Reading the leather photo: grain, color, sheen…','Building the '+GARMENTS[S.kind].label+' from your description…','Rendering in studio light…'];msgs.forEach((m,i)=>setTimeout(()=>{if(run===genRun)sub.textContent=m;},i*700));
-  const key=[S.kind,S.leather,S.color,idea].join('|');
+  const msgs=S.upload?['Reading your photo: shape, seams, pose…','Reading the leather photo: grain, color, sheen…','Replacing the material, keeping the cut…']:['Reading the leather photo: grain, color, sheen…','Building the '+GARMENTS[S.kind].label+' from your description…','Rendering in studio light…'];msgs.forEach((m,i)=>setTimeout(()=>{if(run===genRun)sub.textContent=m;},i*700));
+  const key=[S.kind,S.leather,S.color,idea,S.upload?S.upload.name:''].join('|');
   let live=AI.cache[key]||null,why='';
   if(!live&&AI.enabled()&&navigator.onLine){
     try{const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),75000);live=await AI.generate(idea,L,cn,hex,ctl.signal);clearTimeout(to);AI.cache[key]=live;}
@@ -694,7 +722,8 @@ async function generate(){
   }else if(!live){await new Promise(r=>setTimeout(r,1700));}
   if(run!==genRun)return;
   g.classList.remove('on');S.generated=true;S.liveImg=live;
-  a.innerHTML=live?livePhoto(live):photo(viewImg(S.kind,S.view),hex);
+  if(S.upload){st.classList.add('two');a.style.display='contents';a.innerHTML=`<figure>${livePhoto(S.upload.src)}<figcaption>Your photo</figcaption></figure><figure>${live?livePhoto(live):photo(viewImg(S.kind,S.view),hex)}<figcaption>${cn} · ${L.short}</figcaption></figure>`;}
+  else{a.style.display='';a.innerHTML=live?livePhoto(live):photo(viewImg(S.kind,S.view),hex);}
   $('badge').textContent=live?'AI image · live · for inspiration':'AI image · for inspiration';
   if(why)toast('Live generation failed ('+why+'). Showing the pregenerated image.');
   renderStep3();renderNext();
@@ -710,7 +739,7 @@ function renderStep3(pal){
   const L=LEATHERS[S.leather],[cn]=L.colors[S.color];const up=GARMENTS[S.kind].type==='upholstery';
   $('cap3').innerHTML=pal?pal.c.map(([k,i])=>`<span><b>${LEATHERS[k].colors[i][0]}</b> · ${LEATHERS[k].short}</span>`).join(''):`<span><b>${cn}</b> · ${L.short}</span>`;
   $('btnCompareFull').style.display=S.kind==='pants'?'':'none';
-  const vt=$('viewtog');vt.innerHTML='';if(!pal&&S.kind==='pants'&&!S.liveImg){[['front','Front'],['back','Back']].forEach(([v,l])=>{const b=document.createElement('button');b.className='chip'+(S.view===v?' on':'');b.textContent=l;b.onclick=()=>{S.view=v;$('imArt').innerHTML=photo(viewImg(S.kind,v),L.colors[S.color][1]);renderStep3();};vt.appendChild(b);});}
+  const vt=$('viewtog');vt.innerHTML='';if(!pal&&S.kind==='pants'&&!S.liveImg&&!S.upload){[['front','Front'],['back','Back']].forEach(([v,l])=>{const b=document.createElement('button');b.className='chip'+(S.view===v?' on':'');b.textContent=l;b.onclick=()=>{S.view=v;$('imArt').innerHTML=photo(viewImg(S.kind,v),L.colors[S.color][1]);renderStep3();};vt.appendChild(b);});}
   const w=$('sw3');w.innerHTML='';
   Object.values(LEATHERS).forEach(LL=>{if(up!==!!LL.upholstery)return;const g=document.createElement('div');g.className='swg';g.innerHTML=`<span class="n">${LL.name}</span><div class="swatches"></div>`;const ws=g.querySelector('.swatches');
     LL.colors.forEach(([n,hx],i)=>{const b=document.createElement('button');b.className='sw'+(!pal&&LL.key===S.leather&&i===S.color?' on':'');b.title=LL.name+' · '+n;b.innerHTML=photo('hide',hx);b.onclick=()=>{S.leather=LL.key;S.color=i;S.picked=true;renderLeathers();generate();};ws.appendChild(b);});w.appendChild(g);});

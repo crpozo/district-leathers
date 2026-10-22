@@ -6,3 +6,4 @@ pants_cow https://www.figma.com/api/mcp/asset/9eed25cf-c3f2-4810-8b37-a0876a8e0e
 m_pants_f https://www.figma.com/api/mcp/asset/ff590c4a-eab4-4e0b-90ff-7244bf0ab374.png
 m_pants_b https://www.figma.com/api/mcp/asset/4b7d6667-2c9d-47dc-a008-1d118008f7bc.png
 m_jacket  https://www.figma.com/api/mcp/asset/6ce22c11-34de-4200-9745-7e239f9d0328.png
+sample_jacket https://www.figma.com/api/mcp/asset/a92e10d7-b072-49e4-8a6b-43fc94e8b1e4.png
