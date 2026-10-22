@@ -182,7 +182,9 @@ table.t th{background:var(--paper-2);font-weight:600;font-size:10px;letter-spaci
 .uplprev{display:flex;gap:12px;align-items:center;margin-top:10px;background:var(--paper-2);padding:10px;border-radius:4px;font-size:13px}
 .uplprev img{width:64px;height:64px;object-fit:cover;border-radius:3px;background:#ddd}
 .uplprev .btn.link{margin-left:auto}
-.stage.two .ph.live{width:min(100%,300px);margin:0 auto}
+.ph.tall{aspect-ratio:3/4}
+.stage.two .ph{width:min(100%,280px);max-height:none}
+.stage.two .ph.k-mjacket,.stage.two .ph.k-mpantsf,.stage.two .ph.k-mpantsb{width:min(100%,280px)}
 .live{background:var(--tip-bg);border:1px solid #d6dca3;padding:10px 12px;font-size:13px;border-radius:4px;margin:12px 0 0;display:flex;gap:10px;align-items:center}
 .live .ic{width:40px;height:40px;flex:none}
 .fitrow{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
@@ -565,7 +567,7 @@ const PH={n:0,cache:{},imgs:{},
     const c=document.createElement('canvas');c.width=D.w;c.height=D.h;c.getContext('2d').putImageData(out,0,0);return this.cache[key]=c.toDataURL('image/png');},
   async paint(id,kind,hex){const url=await this.render(kind,hex);const el=document.getElementById(id);if(el&&url){const im=el.querySelector('img');if(im)im.src=url;}}
 };
-function livePhoto(dataUrl){return `<div class="ph live"><div class="b" style="background-image:url(${dataUrl})"></div></div>`;}
+function livePhoto(dataUrl,extra=''){return `<div class="ph live ${extra}"><div class="b" style="background-image:url(${dataUrl})"></div></div>`;}
 function swatch(hex,on,title){return `<button class="sw${on?' on':''}" title="${title||''}" aria-label="${title||''}">${photo('hide',hex)}</button>`;}
 function dots(n){return '<span class="drapebar">'+[1,2,3,4,5].map(i=>`<i class="${i<=n?'f':''}"></i>`).join('')+'</span>';}
 function drapeWord(n){return n<=2?'structured':n>=4?'fluid':'medium';}
@@ -722,7 +724,7 @@ async function generate(){
   }else if(!live){await new Promise(r=>setTimeout(r,1700));}
   if(run!==genRun)return;
   g.classList.remove('on');S.generated=true;S.liveImg=live;
-  if(S.upload){st.classList.add('two');a.style.display='contents';a.innerHTML=`<figure>${livePhoto(S.upload.src)}<figcaption>Your photo</figcaption></figure><figure>${live?livePhoto(live):photo(viewImg(S.kind,S.view),hex)}<figcaption>${cn} · ${L.short}</figcaption></figure>`;}
+  if(S.upload){st.classList.add('two');a.style.display='contents';a.innerHTML=`<figure>${livePhoto(S.upload.src,'tall')}<figcaption>Your photo</figcaption></figure><figure>${live?livePhoto(live,'tall'):photo(viewImg(S.kind,S.view),hex)}<figcaption>${cn} · ${L.short}</figcaption></figure>`;}
   else{a.style.display='';a.innerHTML=live?livePhoto(live):photo(viewImg(S.kind,S.view),hex);}
   $('badge').textContent=live?'AI image · live · for inspiration':'AI image · for inspiration';
   if(why)toast('Live generation failed ('+why+'). Showing the pregenerated image.');
