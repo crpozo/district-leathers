@@ -26,6 +26,7 @@ IMAGES = {
     'IMG_MPANTSB': 'm_pants_b_base.jpg',   # AI, pants on model, back
     'IMG_MPANTSB_M': 'm_pants_b_mask.png',
     'IMG_SAMPLE': 'sample_jacket.jpg',       # AI, customer-style photo of a cotton bomber (upload example)
+    'IMG_SKETCH': 'sample_sketch.jpg',       # AI, pencil sketch of a bomber (upload example)
 }
 MIME = {'.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp'}
 

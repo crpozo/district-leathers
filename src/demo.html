@@ -178,11 +178,14 @@ table.t th{background:var(--paper-2);font-weight:600;font-size:10px;letter-spaci
 .ut b{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
 .ut span{font-size:11px;color:var(--ink-3)}
 .ut.on{border:1.5px solid var(--ink)}
-.tag.fin{position:absolute;top:-8px;right:8px;background:#e8d9a8;border-color:#e8d9a8;color:#3b2f10;font-style:normal}
 .uplprev{display:flex;gap:12px;align-items:center;margin-top:10px;background:var(--paper-2);padding:10px;border-radius:4px;font-size:13px}
 .uplprev img{width:64px;height:64px;object-fit:cover;border-radius:3px;background:#ddd}
 .uplprev .btn.link{margin-left:auto}
 .ph.tall{aspect-ratio:3/4}
+.ph.tall svg{width:100%;height:100%}
+.askref{display:grid;place-items:center;border:1.5px dashed #b9b9b9;border-radius:4px;background:#fff;padding:16px;text-align:center}
+.askref>div{display:flex;flex-direction:column;gap:8px;align-items:center;font-size:12px}
+.askref b{font-size:11px;letter-spacing:.08em;text-transform:uppercase}
 .stage.two .ph{width:min(100%,280px);max-height:none}
 .stage.two .ph.k-mjacket,.stage.two .ph.k-mpantsf,.stage.two .ph.k-mpantsb{width:min(100%,280px)}
 .live{background:var(--tip-bg);border:1px solid #d6dca3;padding:10px 12px;font-size:13px;border-radius:4px;margin:12px 0 0;display:flex;gap:10px;align-items:center}
@@ -383,10 +386,10 @@ table.t th{background:var(--paper-2);font-weight:600;font-size:10px;letter-spaci
       <p class="lbl" style="margin-top:16px">Or upload a file</p>
       <div class="upl" id="upl">
         <button class="ut" onclick="pickUpload('photo')"><b>Photo of a piece</b><span>Your jacket, your sofa, your car seat. We change the material to this leather.</span></button>
-        <button class="ut" onclick="pickUpload('sketch')"><b>Sketch or technical drawing</b><span>Becomes a realistic image in this leather.</span><i class="tag fin">Final version</i></button>
-        <button class="ut" onclick="pickUpload('pattern')"><b>Pattern · DXF or PDF</b><span>Exact sq ft, hides and cutting map from your pieces.</span><i class="tag fin">Final version</i></button>
+        <button class="ut" onclick="pickUpload('sketch')"><b>Sketch or technical drawing</b><span>Becomes a realistic image in this leather.</span></button>
+        <button class="ut" onclick="pickUpload('pattern')"><b>Pattern · DXF or PDF</b><span>Exact sq ft, hides and cutting map from your pieces.</span></button>
       </div>
-      <input type="file" id="uplFile" accept="image/*" hidden>
+      <input type="file" id="uplFile" accept="image/*" hidden><input type="file" id="uplPat" accept=".dxf,.pdf,image/*" hidden>
       <div class="uplprev" id="uplPrev" hidden></div>
       <div class="live" id="live"></div>
       <div class="fitrow" id="fitrow">
@@ -578,20 +581,33 @@ function imgFor(kind,leatherKey){const L=LEATHERS[leatherKey];if(kind==='pants'&
 function viewImg(kind,view){if(kind==='jacket')return 'mjacket';if(kind==='pants')return view==='back'?'mpantsb':'mpantsf';return GARMENTS[kind].img;}
 S.view='front';S.upload=null;
 const SAMPLE_PHOTO='{{IMG_SAMPLE}}';
+const SAMPLE_SKETCH='{{IMG_SKETCH}}';
+/* Sample pattern: pants, women M, 8 pieces (what the DXF parser returns). Areas in sq ft, lengths in cm. */
+const SAMPLE_PATTERN={name:'pants_women_M.dxf',kind:'pants',pieces:[['A','Front leg',2,5.1,108],['B','Back leg',2,5.6,110],['C','Waistband',2,0.7,42],['D','Pocket bag',2,0.4,24]],area:23.6,longest:110};
+const UPL={photo:{title:'Photo of a piece',sample:'a cotton bomber jacket',idea:'Same jacket as my photo, in this leather',pat:'jacket',note:'We keep the shape and change the material to the leather you picked.'},
+  sketch:{title:'Sketch or technical drawing',sample:'a pencil sketch of a bomber',idea:'The bomber jacket in my sketch',pat:'jacket',note:'We turn the sketch into a realistic image in the leather you picked.'},
+  pattern:{title:'Pattern · DXF or PDF',sample:'pants, women M, 8 pieces',idea:'Pants from my pattern',pat:'pants',note:'We read every piece: exact sq ft, longest piece, hides and the cutting map.'}};
+function patternSVG(P,small){const pc=(x,y,w,h,l,sub)=>`<path d="M${x} ${y} L${x+w} ${y} L${x+w-4} ${y+h} L${x+4} ${y+h}Z" fill="#fff" stroke="#1c1c1c" stroke-width="1.2" stroke-dasharray="${small?'':'none'}"/><text x="${x+w/2}" y="${y+h/2}" font-size="12" font-weight="700" text-anchor="middle" fill="#1c1c1c">${l}</text>${small?'':`<text x="${x+w/2}" y="${y+h/2+14}" font-size="8" text-anchor="middle" fill="#666">${sub}</text>`}`;
+  return `<svg viewBox="0 0 300 400" style="background:#fff;border:1px solid var(--line);border-radius:4px" aria-label="Pattern pieces"><g stroke="#e5e5e5" stroke-width=".6">${[...Array(16)].map((_,i)=>`<line x1="${i*20}" y1="0" x2="${i*20}" y2="400"/>`).join('')}${[...Array(21)].map((_,i)=>`<line x1="0" y1="${i*20}" x2="300" y2="${i*20}"/>`).join('')}</g>
+  ${pc(16,16,56,226,'A','front ×2')}${pc(80,16,56,226,'A','front ×2')}${pc(146,16,62,232,'B','back ×2')}${pc(216,16,62,232,'B','back ×2')}${pc(16,262,120,22,'C','waistband ×2')}${pc(16,292,120,22,'C','')}${pc(150,262,52,48,'D','pocket ×2')}${pc(212,262,52,48,'D','')}
+  <text x="16" y="340" font-size="9" fill="#666">${P.name} · ${P.pieces.reduce((n,p)=>n+p[2],0)} pieces · ${P.area} sq ft net · longest ${P.longest} cm</text><line x1="16" y1="360" x2="76" y2="360" stroke="#1c1c1c" stroke-width="2"/><text x="82" y="363" font-size="9" fill="#666">50 cm</text></svg>`;}
 function pickUpload(t){
-  if(t!=='photo'){toast(t==='sketch'?'Final version: a sketch or technical drawing becomes a realistic image in this leather.':'Final version: a DXF or PDF pattern gives exact sq ft, hides and the cutting map.');return;}
-  const f=$('uplFile');f.value='';f.onchange=()=>{const file=f.files[0];if(!file)return;const rd=new FileReader();rd.onload=()=>setUpload(rd.result,file.name);rd.readAsDataURL(file);};
-  const pv=$('uplPrev');pv.hidden=false;pv.innerHTML=`<img src="${SAMPLE_PHOTO}" alt=""><span><b>Photo of a piece</b><br><span class="muted">Use the sample (a cotton bomber jacket) or a photo from this iPad.</span></span><span class="chips" style="margin-left:auto"><button class="chip" onclick="setUpload(SAMPLE_PHOTO,'sample-jacket.jpg')">Use sample</button><button class="chip" onclick="$('uplFile').click()">From this device</button></span>`;
+  const U=UPL[t];document.querySelectorAll('.ut').forEach(b=>b.classList.toggle('on',b.getAttribute('onclick').includes("'"+t+"'")));
+  const f=$(t==='pattern'?'uplPat':'uplFile');f.value='';f.onchange=()=>{const file=f.files[0];if(!file)return;if(t==='pattern'&&!/^image\//.test(file.type)){setUpload(t,null,file.name);return;}const rd=new FileReader();rd.onload=()=>setUpload(t,rd.result,file.name);rd.readAsDataURL(file);};
+  const thumb=t==='photo'?`<img src="${SAMPLE_PHOTO}" alt="">`:t==='sketch'?`<img src="${SAMPLE_SKETCH}" alt="">`:`<span style="width:64px;height:64px;flex:none">${patternSVG(SAMPLE_PATTERN,true)}</span>`;
+  const pv=$('uplPrev');pv.hidden=false;pv.innerHTML=`${thumb}<span><b>${U.title}</b><br><span class="muted">Use the sample (${U.sample}) or a file from this iPad.</span></span><span class="chips" style="margin-left:auto"><button class="chip" onclick="setUpload('${t}',${t==='photo'?'SAMPLE_PHOTO':t==='sketch'?'SAMPLE_SKETCH':'null'},'${t==='pattern'?SAMPLE_PATTERN.name:'sample-'+t+'.jpg'}')">Use sample</button><button class="chip" onclick="$('${t==='pattern'?'uplPat':'uplFile'}').click()">From this device</button></span>`;
 }
-function setUpload(dataUrl,name){S.upload={src:dataUrl,name};const ta=$('idea');if(!ta.value.trim()){ta.value='Same jacket as my photo, in this leather';S.pattern='jacket';S.patternFilled=true;}
-  document.querySelectorAll('.ut').forEach((b,i)=>b.classList.toggle('on',i===0));
-  const pv=$('uplPrev');pv.hidden=false;pv.innerHTML=`<img src="${dataUrl}" alt=""><span><b>Your photo</b> · ${name}<br><span class="muted">We keep the shape and change the material to the leather you picked.</span></span><button class="btn link" onclick="clearUpload()">Remove</button>`;renderLive();}
-function clearUpload(){S.upload=null;$('uplPrev').hidden=true;document.querySelectorAll('.ut').forEach(b=>b.classList.remove('on'));renderLive();}
+function setUpload(type,dataUrl,name){S.patRef=false;const U=UPL[type];S.upload={type,src:dataUrl,name,pattern:type==='pattern'?SAMPLE_PATTERN:null};
+  const ta=$('idea');ta.value=U.idea;S.pattern=U.pat;S.patternFilled=true;document.querySelectorAll('.pt').forEach(b=>b.classList.toggle('on',b.dataset.k===U.pat));
+  if(LEATHERS[S.leather].upholstery){S.leather='nappa';S.color=3;S.picked=true;renderLeathers();}
+  const thumb=dataUrl?`<img src="${dataUrl}" alt="">`:`<span style="width:64px;height:64px;flex:none">${patternSVG(SAMPLE_PATTERN,true)}</span>`;
+  const pv=$('uplPrev');pv.hidden=false;pv.innerHTML=`${thumb}<span><b>${type==='photo'?'Your photo':type==='sketch'?'Your sketch':'Your pattern'}</b> · ${name}<br><span class="muted">${U.note}</span></span><button class="btn link" onclick="clearUpload()">Remove</button>`;renderLive();}
+function clearUpload(){S.upload=null;S.patRef=false;$('uplPrev').hidden=true;document.querySelectorAll('.ut').forEach(b=>b.classList.remove('on'));renderLive();}
 
 /* core rule: sq ft = net area × (1 + waste); hides = sq ft ÷ hide size. Range = hide size variance; recommended = the safe side. */
-function compute(kind,leatherKey,fit,size,waste){
-  const G=GARMENTS[kind],L=LEATHERS[leatherKey];
-  const area=G.type==='garment'?G.area*SIZES[size]*(fit==='men'?1.1:1):G.area;
+function compute(kind,leatherKey,fit,size,waste,P){
+  const G0=GARMENTS[kind],L=LEATHERS[leatherKey];const G=P?Object.assign({},G0,{area:P.area,longest:P.longest}):G0;
+  const area=P?P.area:G.type==='garment'?G.area*SIZES[size]*(fit==='men'?1.1:1):G.area;
   const sq=area*(1+waste);
   let min,rec,price=L.price,label,unitSq=L.avg,note='';
   if(L.kind==='cow'){
@@ -616,10 +632,10 @@ const AI={
   save(c){try{localStorage.setItem('dl_ai',JSON.stringify(c));}catch(e){}},
   cache:{},
   enabled(){const c=this.cfg;return !!(c.key&&!c.off);},
-  prompt(idea,L,cn){if(S.upload)return `Edit the first attached photo: keep the garment's exact shape, cut, pose and framing, but change its material to ${L.name} leather in the color ${cn}, using the second attached leather swatch photo as the color, grain and sheen reference. Keep everything else in the photo unchanged. Photorealistic, no text, no logos.`;return `Professional e-commerce product photograph of ${idea}. The product is made of ${L.name} leather in the color ${cn}; use the attached leather swatch photo as the exact color, grain and sheen reference. Studio lighting, seamless plain pure white background, no people, no text, no logos, no brand marks, photorealistic, high detail.`;},
+  prompt(idea,L,cn){if(S.upload&&S.upload.type==='sketch')return `Turn the first attached fashion sketch into a photorealistic e-commerce product photograph of that exact garment, same cut and details, made of ${L.name} leather in the color ${cn}; use the second attached leather swatch photo as the color, grain and sheen reference. Studio lighting, seamless plain pure white background, no people, no text, no logos.`;if(S.upload&&S.upload.src)return `Edit the first attached photo: keep the garment's exact shape, cut, pose and framing, but change its material to ${L.name} leather in the color ${cn}, using the second attached leather swatch photo as the color, grain and sheen reference. Keep everything else in the photo unchanged. Photorealistic, no text, no logos.`;return `Professional e-commerce product photograph of ${idea}. The product is made of ${L.name} leather in the color ${cn}; use the attached leather swatch photo as the exact color, grain and sheen reference. Studio lighting, seamless plain pure white background, no people, no text, no logos, no brand marks, photorealistic, high detail.`;},
   async refImage(hex){return new Promise(res=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=c.height=512;const x=c.getContext('2d');x.drawImage(img,0,0,512,512);x.globalCompositeOperation='multiply';x.fillStyle=tintHex(hex);x.fillRect(0,0,512,512);res(c.toDataURL('image/png'));};img.onerror=()=>res(null);img.src=HIDE_SRC;});},
   async generate(idea,L,cn,hex,signal){
-    const c=this.cfg,prompt=this.prompt(idea,L,cn),ref=await this.refImage(hex);const up=S.upload?S.upload.src:null;
+    const c=this.cfg,prompt=this.prompt(idea,L,cn),ref=await this.refImage(hex);const up=S.upload&&S.upload.src?S.upload.src:null;
     if(c.provider==='openai'){
       const fd=new FormData();fd.append('model',c.model||'gpt-image-1');fd.append('prompt',prompt);fd.append('size','1024x1024');fd.append('quality','medium');
       if(up){fd.append('image[]',await (await fetch(up)).blob(),'photo.jpg');}if(ref){const blob=await (await fetch(ref)).blob();fd.append('image[]',blob,'leather.png');}
@@ -697,8 +713,8 @@ function detectKind(){const t=$('idea').value.toLowerCase();if(S.pattern&&S.patt
 function renderLive(){const t=$('idea').value.trim();const el=$('live');const fr=$('fitrow');
   if(!t){el.innerHTML='<span class="muted">Describe the piece or pick an example. We detect the product type and pick the closest District base pattern.</span>';fr.style.display='none';return;}
   const k=detectKind();const L=LEATHERS[S.leather],[cn,hex]=L.colors[S.color];const G=GARMENTS[k];
-  el.innerHTML=`<span class="ic">${photo(imgFor(k,S.leather),hex)}</span><span>${S.upload?'From your photo: <b>jacket</b> detected. ':''}Closest base pattern: <b>${G.label}</b>${G.type==='upholstery'?" · estimated from District's upholstery table":''}. <span class="muted">${G.type==='upholstery'?'Finishes with a request to a District expert.':"We'll tell you how many hides for your size."}</span></span>`;
-  fr.style.display=G.type==='upholstery'?'none':'grid';}
+  el.innerHTML=`<span class="ic">${photo(imgFor(k,S.leather),hex)}</span><span>${S.upload?(S.upload.type==='pattern'?`From your pattern: <b>${S.upload.pattern.pieces.reduce((n,p)=>n+p[2],0)} pieces · ${S.upload.pattern.area} sq ft net · longest piece ${S.upload.pattern.longest} cm</b>. Hides and cutting map use your exact pieces. `:`From your ${S.upload.type}: <b>jacket</b> detected. `):''}Closest base pattern: <b>${G.label}</b>${G.type==='upholstery'?" · estimated from District's upholstery table":''}. <span class="muted">${G.type==='upholstery'?'Finishes with a request to a District expert.':"We'll tell you how many hides for your size."}</span></span>`;
+  fr.style.display=G.type==='upholstery'?'none':'grid';const sz=$('cSize');if(sz)sz.parentElement.style.display=S.upload&&S.upload.type==='pattern'?'none':'';}
 function goStep(n){document.querySelectorAll('.step').forEach(s=>s.classList.toggle('on',+s.dataset.step===n));
   document.querySelectorAll('.steps li').forEach(li=>{const s=+li.dataset.s;li.classList.toggle('on',s===n);li.classList.toggle('done',s<n);});
   const L=LEATHERS[S.leather],[cn,hex]=L.colors[S.color];
@@ -715,16 +731,17 @@ async function generate(){
   const st=$('stage');st.classList.remove('two');const a=$('imArt');a.innerHTML='';
   $('genText').textContent=`Generating in ${L.name} · ${cn}…`;
   const g=$('gen');g.classList.add('on');const sub=$('genSub');
-  const msgs=S.upload?['Reading your photo: shape, seams, pose…','Reading the leather photo: grain, color, sheen…','Replacing the material, keeping the cut…']:['Reading the leather photo: grain, color, sheen…','Building the '+GARMENTS[S.kind].label+' from your description…','Rendering in studio light…'];msgs.forEach((m,i)=>setTimeout(()=>{if(run===genRun)sub.textContent=m;},i*700));
+  const msgs=S.upload?(S.upload.type==='pattern'?['Reading your pattern: 8 pieces…','Measuring every piece: area and longest edge…','Laying the pieces on the hides…']:S.upload.type==='sketch'?['Reading your sketch: cut, collar, closures…','Reading the leather photo: grain, color, sheen…','Rendering the garment in studio light…']:['Reading your photo: shape, seams, pose…','Reading the leather photo: grain, color, sheen…','Replacing the material, keeping the cut…']):['Reading the leather photo: grain, color, sheen…','Building the '+GARMENTS[S.kind].label+' from your description…','Rendering in studio light…'];msgs.forEach((m,i)=>setTimeout(()=>{if(run===genRun)sub.textContent=m;},i*700));
   const key=[S.kind,S.leather,S.color,idea,S.upload?S.upload.name:''].join('|');
   let live=AI.cache[key]||null,why='';
-  if(!live&&AI.enabled()&&navigator.onLine){
+  if(!live&&AI.enabled()&&navigator.onLine&&!(S.upload&&S.upload.type==='pattern')){
     try{const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),75000);live=await AI.generate(idea,L,cn,hex,ctl.signal);clearTimeout(to);AI.cache[key]=live;}
     catch(e){why=e.name==='AbortError'?'timed out':e.message;console.warn('Live AI failed, using backup:',why);}
   }else if(!live){await new Promise(r=>setTimeout(r,1700));}
   if(run!==genRun)return;
   g.classList.remove('on');S.generated=true;S.liveImg=live;
-  if(S.upload){st.classList.add('two');a.style.display='contents';a.innerHTML=`<figure>${livePhoto(S.upload.src,'tall')}<figcaption>Your photo</figcaption></figure><figure>${live?livePhoto(live,'tall'):photo(viewImg(S.kind,S.view),hex)}<figcaption>${cn} · ${L.short}</figcaption></figure>`;}
+  if(S.upload&&S.upload.type==='pattern'){st.classList.add('two');a.style.display='contents';a.innerHTML=`<figure><div class="ph tall">${patternSVG(S.upload.pattern)}</div><figcaption>Your pattern · ${S.upload.pattern.area} sq ft</figcaption></figure><figure id="patRef">${S.patRef?photo(viewImg('pants','front'),hex):`<div class="ph tall askref"><div><b>Add a sketch or a photo to see it</b><span class="muted">We don't draw the garment from the pieces alone. The hides and the cutting map are already exact.</span><button class="chip" onclick="S.patRef=true;generate()">Use the sample sketch</button></div></div>`}<figcaption>${S.patRef?cn+' · '+L.short:'Image'}</figcaption></figure>`;}
+  else if(S.upload){st.classList.add('two');a.style.display='contents';a.innerHTML=`<figure>${livePhoto(S.upload.src,'tall')}<figcaption>Your ${S.upload.type}</figcaption></figure><figure>${live?livePhoto(live,'tall'):photo(S.upload.type==='sketch'?'jacket':viewImg(S.kind,S.view),hex)}<figcaption>${cn} · ${L.short}</figcaption></figure>`;}
   else{a.style.display='';a.innerHTML=live?livePhoto(live):photo(viewImg(S.kind,S.view),hex);}
   $('badge').textContent=live?'AI image · live · for inspiration':'AI image · for inspiration';
   if(why)toast('Live generation failed ('+why+'). Showing the pregenerated image.');
@@ -762,19 +779,19 @@ function renderNext(){
       <div class="small ok">✓ ${r.rec} × ${money(r.price)} = ${money(r.total)}</div></div>
       <div class="spacer"></div><button class="btn" onclick="startProject()">Send to a District expert</button>
       <div class="muted" style="margin-top:8px">The request arrives with the image, car model or piece, use, budget and photos. Your project stays private.</div>`;return;}
-  const r=compute(S.kind,S.leather,S.fit,S.size,S.waste);
-  n.innerHTML=`<p class="lbl">Next step</p><div class="card"><div style="font-weight:600;font-size:13px">How many hides?</div><div class="muted">Closest base pattern: <b>${G.label}</b></div>
-    <div class="chips" style="margin:8px 0" id="nFit"></div><div class="chips" style="margin:0 0 8px" id="nSize"></div>
+  const P=S.upload&&S.upload.type==='pattern'?S.upload.pattern:null;const r=compute(S.kind,S.leather,S.fit,S.size,S.waste,P);
+  n.innerHTML=`<p class="lbl">Next step</p><div class="card"><div style="font-weight:600;font-size:13px">How many hides?</div><div class="muted">${P?`From your pattern: <b>${P.pieces.reduce((q,p)=>q+p[2],0)} pieces · ${P.area} sq ft net</b> (exact, not an estimate)`:`Closest base pattern: <b>${G.label}</b>`}</div>
+    ${P?`<table class="t" style="margin:8px 0;font-size:11px">${P.pieces.map(p=>`<tr><td><b>${p[0]}</b> ${p[1]}</td><td>×${p[2]}</td><td>${p[3]} sq ft</td><td>${p[4]} cm</td></tr>`).join('')}</table>`:`<div class="chips" style="margin:8px 0" id="nFit"></div><div class="chips" style="margin:0 0 8px" id="nSize"></div>`}
     <div class="big">${r.min===r.rec?r.rec:r.min+'–'+r.rec}<small>${r.label}</small>${r.min!==r.rec?`<span class="rec">Recommended: ${r.rec}</span>`:''}</div>
-    <div class="muted">${Math.round(r.area)} sq ft + ${Math.round(S.waste*100)}% waste = ${Math.round(r.sq)} sq ft. ${r.note}</div>
+    <div class="muted">${P?r.area:Math.round(r.area)} sq ft + ${Math.round(S.waste*100)}% waste = ${Math.round(r.sq)} sq ft. ${r.note}</div>
     <div class="small ${r.stockOk?'ok':'warn'}" style="margin-top:6px">${r.stockOk?'✓ Same lot '+L.lot+' · '+L.stock+' left':'✗ Only '+L.stock+' left in lot '+L.lot+'. Talk to District before buying.'}</div>
     <div class="small ok">✓ ${r.rec} × ${money(r.price)}${r.disc?' · '+Math.round(r.disc*100)+'% off':''} = ${money(r.total)}${r.total>=250?' · free shipping':''}</div>
-    ${r.longOk?'':`<div class="warnbox" style="margin-top:8px">Legs will need a seam at the knee with this leather (longest piece ${G.longest} cm, hide ≈ ${L.useful} cm). <a href="#" onclick="go('cutmap');return false">See cutting map</a> or pick a bigger hide.</div>`}
+    ${r.longOk?'':`<div class="warnbox" style="margin-top:8px">Legs will need a seam at the knee with this leather (longest piece ${P?P.longest:G.longest} cm, hide ≈ ${L.useful} cm). <a href="#" onclick="go('cutmap');return false">See cutting map</a> or pick a bigger hide.</div>`}
     ${r.nudge?`<div class="nudge" style="margin-top:10px"><b>Add ${r.nudge.q-r.rec} spare → ${r.nudge.q} for ${money(r.nudge.total)} (${Math.round(r.nudge.d*100)}% off).</b><br>Same lot, in case a piece needs recutting.</div>`:''}</div>
     <div class="spacer"></div><button class="btn" onclick="addCart(${r.rec},'${L.short} · ${cn} · Lot ${L.lot}')">Add ${r.rec} ${r.label} to cart</button>
     <div class="spacer"></div><button class="btn ghost" onclick="${S.kind==='pants'?"go('cutmap')":"toast('Cutting map for the jacket: Phase 1 (drawn by the pattern maker)')"}">See cutting map</button>
     <div class="row" style="margin-top:10px"><button class="btn link" onclick="openCalc()">Full calculator</button><button class="btn link" onclick="toast('Saved to My District account (uses your Shopify login)')">Save project</button><button class="btn link" onclick="toast('Opens District chat with the leather, garment, size and calculation already written')">Chat with an expert</button></div>`;
-  chips('nFit',[['women','Women'],['men','Men']],S.fit,v=>{S.fit=v;renderFit();renderNext();});chips('nSize',Object.keys(SIZES).map(s=>[s,s]),S.size,v=>{S.size=v;renderFit();renderNext();});
+  if(!P){chips('nFit',[['women','Women'],['men','Men']],S.fit,v=>{S.fit=v;renderFit();renderNext();});chips('nSize',Object.keys(SIZES).map(s=>[s,s]),S.size,v=>{S.size=v;renderFit();renderNext();});}
 }
 function startProject(){const G=GARMENTS[S.kind];const r=compute(S.kind,S.leather,S.fit,S.size,.25);Object.assign(PRJ,{what:G.what,kind:S.kind,leather:S.leather,color:S.color,hides:r.rec,live:S.liveImg,model:S.kind==='seats'?'1967 Corvette, 2 front seats':''});go('project');}
 

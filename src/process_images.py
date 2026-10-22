@@ -56,5 +56,5 @@ def plain(name, height=900, quality=84):
 
 if __name__ == '__main__':
     for n, th in FLAT.items(): flat(n, th)
-    plain('sample_jacket')
+    plain('sample_jacket'); plain('sample_sketch', quality=80)
     for n, (seed, top, bot) in MODEL.items(): model(n, seed, top, bot)
